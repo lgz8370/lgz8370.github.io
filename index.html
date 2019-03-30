@@ -6,7 +6,7 @@
   <meta name="author" content="Dong Yuanxin">
   
   
-  <title>xxx的blog</title>
+  <title>卢国峥的blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -40,8 +40,8 @@
   window.AD_CONFIG = {
     leancloud: {"appid":"ocgtDtRN3Xyzytc5vbtpJJUM-gzGzoHsz","appkey":"lDrQAIWd40HOkpAStQbuLTaC","comment":true,"count":true},
     welcome: {"enable":false,"interval":30},
-    start_time: "2018-02-10",
-    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    start_time: "2019-3-29",
+    passwords: ["eb4d6a57c88d1e0b941646cdc244c926be77f88fd66748238d9c5819b6d99160", ],
     is_post: false,
     lock: false,
     author: "Dong Yuanxin",
@@ -147,6 +147,50 @@
         <div class="home-article-inner" data-cover="false">
           <div class="passage-meta">
             <span>
+              <i class="fa fa-calendar"></i>2019-03-29
+            </span>
+            
+              <span>
+                | <a href="/categories/java基础/"><i class="fa fa-bookmark"></i>java基础</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2019/03/29/集合面试题/">集合面试题</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>整理 HashSet/ArrayList/HashMap 集合相关一些基础知识</p>
+<p>涉及面试遇到的一些面试题~!<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2019/03/29/集合面试题/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/java基础/"><i class="fa fa-tags"></i>java基础</a>
+             
+              <a href="/tags/面试题/"><i class="fa fa-tags"></i>面试题</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
               <i class="fa fa-calendar"></i>2019-03-27
             </span>
             
@@ -165,15 +209,8 @@
           </h1>
           <div class="home-article-content passage-article">
             
-              <p>1.安装需要的软件包:yum-util提供yum-config-manager功能</p>
-<pre><code>yum install -y yum-utils device-mapper-persistent-data lvm2
-</code></pre><p>ps:如果安装过docker,需要重装可以先删除在装:</p>
-<pre><code>// 查看是否有安装
-dockeryum list installed | grep docker
-
-//有则删除对应的包
-yum remove docker ......
-</code></pre>
+              <p>1.安装需要的软件包:yum-util提供yum-config-manager功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure></p>
+<p>ps:如果安装过docker,需要重装可以先删除在装:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 查看是否有安装</span><br><span class="line">dockeryum list installed | grep docker</span><br><span class="line"></span><br><span class="line">//有则删除对应的包</span><br><span class="line">yum remove docker ......</span><br></pre></td></tr></table></figure></p>
             
           </div>
           <a class="home-article-read" href="/2019/03/27/Untitled/">
@@ -183,86 +220,6 @@ yum remove docker ......
             <div class="passage-tags">
              
               <a href="/tags/docker/"><i class="fa fa-tags"></i>docker</a>
-            
-            </div>
-          
-        </div>
-        
-      </div>
-    </div>
-  
-    <div class="home-article-wrapper clearfix">
-      <div class="home-article" data-cover="false">
-        <div class="home-article-inner" data-cover="false">
-          <div class="passage-meta">
-            <span>
-              <i class="fa fa-calendar"></i>2019-03-26
-            </span>
-            
-              <span>
-                | <a href="/categories/java基础/"><i class="fa fa-bookmark"></i>java基础</a>
-              </span>
-            
-            
-              <span>
-                | <i class="fa fa-unlock-alt"></i>UNLOCK
-              </span>
-            
-          </div>
-          <h1 class="home-article-title">
-            <a href="/2019/03/26/tags_ 反射/">反射</a>
-          </h1>
-          <div class="home-article-content passage-article">
-            
-              <p>反射的优缺点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">优点:</span><br><span class="line">    1.反射提高了程序的灵活性和扩展性;</span><br><span class="line">    2.减低耦合性,提高自适应能力</span><br><span class="line">    3.允许程序创建和控制任何类的对象,无需提前硬编码目标类</span><br><span class="line">缺点:</span><br><span class="line">    1.性能问题:使用反射基本上是一种在运行期间解析字节码操作,效率低,一般程序不建议使用,对灵活性和拓展性要求较高的工具和框架上使用较多</span><br><span class="line">    2.代码复杂性:反射发生在运行期,程序员无法再源代码中看到程序的逻辑,反射代码比相应的直接的代码更复杂,因而会带来维护的问题</span><br></pre></td></tr></table></figure>
-<p>通过反射获取字节码对象<br>
-            
-          </p></div>
-          <a class="home-article-read" href="/2019/03/26/tags_ 反射/">
-            README MORE >>>
-          </a>
-          
-            <div class="passage-tags">
-             
-              <a href="/tags/反射/"><i class="fa fa-tags"></i>反射</a>
-            
-            </div>
-          
-        </div>
-        
-      </div>
-    </div>
-  
-    <div class="home-article-wrapper clearfix">
-      <div class="home-article" data-cover="false">
-        <div class="home-article-inner" data-cover="false">
-          <div class="passage-meta">
-            <span>
-              <i class="fa fa-calendar"></i>2019-03-26
-            </span>
-            
-            
-              <span>
-                | <i class="fa fa-unlock-alt"></i>UNLOCK
-              </span>
-            
-          </div>
-          <h1 class="home-article-title">
-            <a href="/2019/03/26/tags_ markdown/">Markdown语法</a>
-          </h1>
-          <div class="home-article-content passage-article">
-            
-              <p><img src="/images/pasted-3.png" alt="filename already exists, renamed"><br>
-            
-          </p></div>
-          <a class="home-article-read" href="/2019/03/26/tags_ markdown/">
-            README MORE >>>
-          </a>
-          
-            <div class="passage-tags">
-             
-              <a href="/tags/markdown/"><i class="fa fa-tags"></i>markdown</a>
             
             </div>
           

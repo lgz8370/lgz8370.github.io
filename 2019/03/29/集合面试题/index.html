@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="Dong Yuanxin">
+  
+  
+  <title>集合面试题 | 卢国峥的blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="java基础,面试题,java基础,面试题,">
+  
+
+  
+  <meta name="description" content="整理 HashSet/ArrayList/HashMap 集合相关一些基础知识涉及面试遇到的一些面试题~!">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"ocgtDtRN3Xyzytc5vbtpJJUM-gzGzoHsz","appkey":"lDrQAIWd40HOkpAStQbuLTaC","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-3-29",
+    passwords: ["eb4d6a57c88d1e0b941646cdc244c926be77f88fd66748238d9c5819b6d99160", ],
+    is_post: true,
+    lock: false,
+    author: "Dong Yuanxin",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">LGZ</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 安静写些东西</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-29
+    </span>
+    
+      <span>
+        | <a href="/categories/java基础/"><i class="fa fa-bookmark"></i>java基础</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    集合面试题
+  </h1>
+  
+  <article class="passage-article">
+    <br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Collection/Colections</span><br></pre></td></tr></table></figure><p></p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> 面试题:Collection和Collections的区别.</li>
+</ul>
+<p>==Collections类:封装了Set,List,Map的操作的工具方法.==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">常用的集合类:</span><br><span class="line"></span><br><span class="line">  HashSet/ArrayList/HashMap都是线程不安全的,在多线程环境下不安全.</span><br><span class="line">  </span><br><span class="line">  在Collections类中有获取线程安全的集合方法:</span><br></pre></td></tr></table></figure>
+<p>==Collections中获取安全的用法:==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set  set = Collections.synchronizedSet(new HashSet());</span><br><span class="line"></span><br><span class="line">Map map = Collections.synchronizedMap(new HashMap());</span><br></pre></td></tr></table></figure>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> Collection: 超级接口 子接口包括List 和 Set</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">超级接口:当父接口的抽象方法不能满足使用要求的时候,子接口继承父接口后可以添加自己的抽象方法</span><br><span class="line">源代码中的一小节:</span><br><span class="line">List子接口继承Collection接口</span><br><span class="line">public interface List&lt;E&gt; extends Collection&lt;E&gt;</span><br></pre></td></tr></table></figure>
+<p>==Set,List,Map三种集合并不是都一直是单独使用的,偶尔也会综合使用.==</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> List与Set的区别:子接口(只是一个子接口)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">List:</span><br><span class="line">    允许元素重复,记录先后添加顺序</span><br><span class="line">Set:</span><br><span class="line">    不允许元素重复,不记录先后添加顺序</span><br><span class="line">    LInkedHashSet特例:</span><br><span class="line">        采用哈希算法不能重复,链表算法维持先后顺序</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">允许元素重复,记录先后添加顺序</span><br></pre></td></tr></table></figure>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> List的实现类:</li>
+</ul>
+<h5 id="LinkedList与ArrayList性能对比"><a href="#LinkedList与ArrayList性能对比" class="headerlink" title="LinkedList与ArrayList性能对比:"></a>LinkedList与ArrayList性能对比:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ArrayList:(为什么?)</span><br><span class="line">    查询,更改更快,新增和删除较慢</span><br><span class="line">LinkedList:</span><br><span class="line">    查询,更改较慢,新增和删除较快</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不允许元素重复,不记录先后添加顺序</span><br></pre></td></tr></table></figure>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> 注意:</li>
+</ul>
+<h4 id="必须小心操作可变对象-如果一个Set中的可变元素改变了自身状态导致Object-equals-Object-true-将导致一些问题"><a href="#必须小心操作可变对象-如果一个Set中的可变元素改变了自身状态导致Object-equals-Object-true-将导致一些问题" class="headerlink" title="必须小心操作可变对象,如果一个Set中的可变元素改变了自身状态导致Object.equals(Object)= true,将导致一些问题."></a>必须小心操作可变对象,如果一个Set中的可变元素改变了自身状态导致Object.equals(Object)= true,将导致一些问题.</h4><ul>
+<li style="list-style: none"><input type="checkbox" checked> HashSet: </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">不保证元素的先后添加顺序.</span><br><span class="line">底层才有的是哈希表算法,查询效率极高.</span><br><span class="line">判断两个对象是否相等的规则:</span><br><span class="line">             1):equals比较为true.</span><br><span class="line">             2):hashCode值相同.</span><br><span class="line">要求:要求存在在哈希中的对象元素都得覆盖equals和hashCode方法.</span><br></pre></td></tr></table></figure>
+<p>==LinkedHashSet:  (继承HashSet)==</p>
+<h5 id="一般很少用"><a href="#一般很少用" class="headerlink" title="一般很少用"></a>一般很少用</h5><h5 id="如果要求一个集合既要保证元素不重复-也需要记录添加先后顺序-才选择使用LinkedHashSet"><a href="#如果要求一个集合既要保证元素不重复-也需要记录添加先后顺序-才选择使用LinkedHashSet" class="headerlink" title="如果要求一个集合既要保证元素不重复,也需要记录添加先后顺序,才选择使用LinkedHashSet"></a>如果要求一个集合既要保证元素不重复,也需要记录添加先后顺序,才选择使用LinkedHashSet</h5><pre><code>HashSet的子类,底层也采用的是哈希表算法,但是也使用了链表算法来维持元素的先后添加顺序.
+</code></pre><p>==判断两个对象是否相等的规则和HashSet相同.==</p>
+<h5 id="因为需要多使用一个链表俩记录元素的顺序-所以性能相对于HashSet较低"><a href="#因为需要多使用一个链表俩记录元素的顺序-所以性能相对于HashSet较低" class="headerlink" title="因为需要多使用一个链表俩记录元素的顺序,所以性能相对于HashSet较低."></a>因为需要多使用一个链表俩记录元素的顺序,所以性能相对于HashSet较低.</h5><p>一般少用, 如果要求一个集合既要保证元素不重复,也需要记录添加先后顺序,才选择使用LinkedHashSet.</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> TreeSet:</li>
+</ul>
+<p>不保证元素的先后添加顺序,但是会对集合中的元素做排序操作.底层才有红黑树算法(树结构,比较擅长做范围查询).</p>
+<p>TreeSet要么才有自然排序,要么定制排序.</p>
+<h5 id="自然排序"><a href="#自然排序" class="headerlink" title="自然排序:"></a>自然排序:</h5><p>要求在TreeSet集合中的对象必须实现java.lang.Comparable接口,并覆盖compareTo方</p>
+<h5 id="定制排序"><a href="#定制排序" class="headerlink" title="定制排序:"></a>定制排序:</h5><p>要求在构建TreeSet对象的时候,传入一个比较器对象(必须实现java.lang.Comparator接口)在比较器中覆盖compare方法,并编写比较规则.</p>
+<p>==TreeSet判断元素对象重复的规则:==</p>
+<h5 id="compareTo-compare方法是否返回0-如果返回0-则视为是同一个对象"><a href="#compareTo-compare方法是否返回0-如果返回0-则视为是同一个对象" class="headerlink" title="compareTo/compare方法是否返回0.如果返回0,则视为是同一个对象."></a>compareTo/compare方法是否返回0.如果返回0,则视为是同一个对象.</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map</span><br></pre></td></tr></table></figure>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> HashMap:</li>
+</ul>
+<p>采用哈希表算法, 此时Map中的key不会保证添加的先后顺序,key也不允许重复.<br>key判断重复的标准是: key1和key2是否equals为true,并且hashCode相等.</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> TreeMap:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">采用红黑树算法,此时Map中的key会按照自然顺序或定制排序进行排序,,key也不允许重复.</span><br><span class="line">key判断重复的标准是: compareTo/compare的返回值是否为0.</span><br></pre></td></tr></table></figure>
+<p>==LinkedHashMap:  (继承HashMap)==</p>
+<p>采用链表和哈希表算法,此时Map中的key会保证先后添加的顺序,key不允许重复key判断重复的标准和HashMap中的key的标准相同.</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> Properties:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hashtable (打死不用的实现类) 的子类,此时要求key和value都是String类型.</span><br><span class="line">用来加载资源文件(properties文件(IO再讲)).</span><br></pre></td></tr></table></figure>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#LinkedList与ArrayList性能对比"><span class="toc-text">LinkedList与ArrayList性能对比:</span></a></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#必须小心操作可变对象-如果一个Set中的可变元素改变了自身状态导致Object-equals-Object-true-将导致一些问题"><span class="toc-text">必须小心操作可变对象,如果一个Set中的可变元素改变了自身状态导致Object.equals(Object)= true,将导致一些问题.</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#一般很少用"><span class="toc-text">一般很少用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#如果要求一个集合既要保证元素不重复-也需要记录添加先后顺序-才选择使用LinkedHashSet"><span class="toc-text">如果要求一个集合既要保证元素不重复,也需要记录添加先后顺序,才选择使用LinkedHashSet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#因为需要多使用一个链表俩记录元素的顺序-所以性能相对于HashSet较低"><span class="toc-text">因为需要多使用一个链表俩记录元素的顺序,所以性能相对于HashSet较低.</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#自然排序"><span class="toc-text">自然排序:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#定制排序"><span class="toc-text">定制排序:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#compareTo-compare方法是否返回0-如果返回0-则视为是同一个对象"><span class="toc-text">compareTo/compare方法是否返回0.如果返回0,则视为是同一个对象.</span></a></li></ol>
+  </li></div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 卢国峥</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://yoursite.com/2019/03/29/集合面试题/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/java基础/"><i class="fa fa-tags"></i>java基础</a>
+     
+      <a href="/tags/面试题/"><i class="fa fa-tags"></i>面试题</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="#" target="_self">#</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lgz_silent@163.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.png" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/2019/03/27/Untitled/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>
