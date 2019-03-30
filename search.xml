@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Docker-安装(CentOS7)]]></title>
+    <url>%2F2019%2F03%2F27%2FUntitled%2F</url>
+    <content type="text"><![CDATA[1.安装需要的软件包:yum-util提供yum-config-manager功能 yum install -y yum-utils device-mapper-persistent-data lvm2 ps:如果安装过docker,需要重装可以先删除在装: // 查看是否有安装 dockeryum list installed | grep docker //有则删除对应的包 yum remove docker ...... 1.安装需要的软件包:yum-util提供yum-config-manager功能 yum install -y yum-utils device-mapper-persistent-data lvm2 ps:如果安装过docker,需要重装可以先删除在装: // 查看是否有安装 dockeryum list installed | grep docker //有则删除对应的包 yum remove docker ...... 2.设置yum源(阿里源) yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 3.查看yum库中有没有docker-ce yum list | grep docker-ce 4.安装docker yum install -y docker-ce 5.如果需要设置开机自动启动 //先启动docker服务端 systemctl start docker //启动docker服务开机自启 systemctl enable docker 6.校验docker是否启动成功 docker version 常见问题: 普通用户运行docker 命令会报错: 由于docker daemon需要绑定到主机的 Unix socket 而不是普通的TCP端口,而 Unix socket 的宿主为 root 用户,如果其他用户使用 docker 命令只有在命令钱添加 sudo 才能执行成功,如果不想每次使用 docker 命令是还要多敲 sudo ,可以按照下面的方法解决:s 1.切换到 root 用户 2.把普通用户添加到 docker 组 3.再切换到&lt;普通用户&gt; 4.验证 docker 命令是否成功]]></content>
+      <categories>
+        <category>docker容器系列</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[反射]]></title>
+    <url>%2F2019%2F03%2F26%2Ftags_%20%E5%8F%8D%E5%B0%84%2F</url>
+    <content type="text"><![CDATA[反射的优缺点 1234567优点: 1.反射提高了程序的灵活性和扩展性; 2.减低耦合性,提高自适应能力 3.允许程序创建和控制任何类的对象,无需提前硬编码目标类缺点: 1.性能问题:使用反射基本上是一种在运行期间解析字节码操作,效率低,一般程序不建议使用,对灵活性和拓展性要求较高的工具和框架上使用较多 2.代码复杂性:反射发生在运行期,程序员无法再源代码中看到程序的逻辑,反射代码比相应的直接的代码更复杂,因而会带来维护的问题 通过反射获取字节码对象 反射反射的优缺点 1234567优点: 1.反射提高了程序的灵活性和扩展性; 2.减低耦合性,提高自适应能力 3.允许程序创建和控制任何类的对象,无需提前硬编码目标类缺点: 1.性能问题:使用反射基本上是一种在运行期间解析字节码操作,效率低,一般程序不建议使用,对灵活性和拓展性要求较高的工具和框架上使用较多 2.代码复杂性:反射发生在运行期,程序员无法再源代码中看到程序的逻辑,反射代码比相应的直接的代码更复杂,因而会带来维护的问题 通过反射获取字节码对象 12345678反射:在运行时期,动态的获取类中的信息(构造器,方法,字段)的过程; 获取字节码对象有3中方式: 1.对象.class 2.类名.getClass(); 3.Class.forName(); 注意:每个类在内存中只存在一份字节码对象 基本类型的字节码对象和包装类型的字节码对象是不相同的, 数组属于引用数据类型; 断言 123452.什么是断言(猜测): 期望值(猜测值): 断言时希望是多少. 真实值(程序运行的结果): 程序内部运算之后实际是多少. 断言成功(猜对了): 期望值和真实值相同,此时显示绿条. 断言失败(猜错了): 期望值和真实值不同,此时显示红条. 12345678反射:在运行时期,动态的获取类中的信息(构造器,方法,字段)的过程;获取字节码对象有3中方式: 1.对象.class 2.类名.getClass(); 3.Class.forName();注意:每个类在内存中只存在一份字节码对象基本类型的字节码对象和包装类型的字节码对象是不相同的,数组属于引用数据类型; 通过反射获取/调用构造器创建对象1234567891011反射调用构造器的步骤: 1.获取字节码对象:3中方法可以获取字节码对象 2.获取指定的构造器:getConstructor()或getDeclaredConstructor(); 3.利用构造器创建对象 :newInstance();注意: 如果获取的构造器是私有化的则需要通过setAccessible(true)方法暴力访问,创建对象;获取构造器的4中方法: getConstructor():获取指定的公共的构造器; getConstructors():获取所有公共的构造器; getDeclaredConstructor():获取指定的构造器包括private的 getDeclaredConstructors():获取所有的构造器包括private的 通过反射获取/调用方法123456789101112131415161718192021使用反射调用方法的步骤: 1.获取字节码对象 2.获取构造器并创建对象 3.获取指定方法:getMethod()/getMethods()/getDeclaredMethod()/getDeclaredMethods(); 4.调用方法:invoke();&lt;对象,参数&gt;注意: 如果调用私有化方法,则需要通过setAccessible(true)暴力访问;反射获取方法的4中方法: getMethod():获取指定的共公的方法包括继承的 getMethods():获取所有的公共的方法包括继承的 getDeclaredMethod():获取指定方法包括private不包括继承的 getDeclaredMethods():获取所有的方法包括private的不包括继承的注: 反射调用静态方法: 由于静态方法是用类名.方法名直接调用的,所以通过反射调用静态方法可以不用传入一个对象,可以直接写为null; 反射调用数组方法: 基本类型的数组: 传入参数时是直接new一个数组传进去,如:new int[]&#123;1,2,3&#125;; 引用类型的数组: 传入参数时也是要new一个引用类型的数组进去,但是还需要多包一层,如:new Object[]&#123;new String[]&#123;&quot;a&quot;,&quot;b&quot;,&quot;c&quot;&#125;&#125;; 因为JVM会自动把引用类型的数组解包,所以以后不管是进本类型还是引用类型的数组都用Object再包一层; 通过反射获取/设置字段 1234567用反射获取设置字段步骤: 1.获取字节码对象 2.获取构造器创建对象 3.获取字段 4.设置字段:set(对象,参数);注意: 在访问private字段时需要设置通过setAccessible(true)方法暴力访问; 练习： 123456789101112131415161718192021222324252627282930313233需求:创建一个工厂类BeanFactory提供一个工厂方法Object getBean(String name),调用getBean方法传入一个对象名称会返回对应的实例对象public class BeanFactory &#123; private static Properties p = new Properties(); //静态代码块加载配置文件 static&#123; //加载配置文件方式1:(不推荐):把路径写死了 //InputStream in = new FileInputStream(&quot;E:/code/JavaSeEnhance_day01/src/cn/wolfcode/d/exercise/bean.properties&quot;); //加载配置文件方式4:(推荐) try &#123; InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(&quot;bean.properties&quot;); p.load(in); &#125; catch (IOException e) &#123; // TODO Auto-generated catch block e.printStackTrace(); &#125; &#125; public static Object getBean(String name) throws Exception&#123; //根据name获取value(全限定名) String className = p.getProperty(name); //获取字节码对象 Class clz = Class.forName(className); //创建对象 Object instance = clz.newInstance(); return instance; &#125; @Test public void testBean() throws Exception &#123; Object bean = BeanFactory.getBean(&quot;person&quot;); System.out.println(bean); &#125;&#125;]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>反射</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Markdown语法]]></title>
+    <url>%2F2019%2F03%2F26%2Ftags_%20markdown%2F</url>
+    <content type="text"><![CDATA[]]></content>
+      <tags>
+        <tag>markdown</tag>
+      </tags>
+  </entry>
+</search>
