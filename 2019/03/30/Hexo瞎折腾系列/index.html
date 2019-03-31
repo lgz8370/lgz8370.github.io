@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="Dong Yuanxin">
+  
+  
+  <title>Hexo之瞎折腾系列 | 卢国峥的blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Hexo之瞎折腾系列,Hexo,博客,">
+  
+
+  
+  <meta name="description" content="该文档记录Theme-AD主题个人博客部署到云服务器以及记录新增的一些小功能~！Theme-AD主题具体搭建步骤可以参考：https://godbmw.com/tags/Hexo/Let’s Go">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"ocgtDtRN3Xyzytc5vbtpJJUM-gzGzoHsz","appkey":"lDrQAIWd40HOkpAStQbuLTaC","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-3-29",
+    passwords: ["eb4d6a57c88d1e0b941646cdc244c926be77f88fd66748238d9c5819b6d99160", ],
+    is_post: true,
+    lock: false,
+    author: "Dong Yuanxin",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">LGZ</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 安静写些东西</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-30
+    </span>
+    
+      <span>
+        | <a href="/categories/Hexo之瞎折腾系列/"><i class="fa fa-bookmark"></i>Hexo之瞎折腾系列</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Hexo之瞎折腾系列
+  </h1>
+  
+  <article class="passage-article">
+    <br>Theme-AD主题具体搭建步骤可以参考：<a href="https://godbmw.com/tags/Hexo/" target="_blank" rel="noopener">https://godbmw.com/tags/Hexo/</a><p></p>
+<h5 id="1-云服务器部署Hexo"><a href="#1-云服务器部署Hexo" class="headerlink" title="1.云服务器部署Hexo"></a>1.云服务器部署Hexo</h5><p>参考文档：<a href="https://www.jianshu.com/p/b2e47ec9359d" target="_blank" rel="noopener">https://www.jianshu.com/p/b2e47ec9359d</a></p>
+<h6 id="1-0-后台运行Hexo"><a href="#1-0-后台运行Hexo" class="headerlink" title="1.0 后台运行Hexo"></a>1.0 后台运行<code>Hexo</code></h6><p>部署到云服务器后如果还是在<code>hexo</code>根目录下使用命令启动，会有个问题就是：当你断开服务器连接之后hexo服务就会停止，无法访问。</p>
+<p>那么可以用pm2启动<code>hexo</code>，这样hexo就在后台运行了，就算断开服务器连接也不会停止</p>
+<h6 id="1-1-安装pm2"><a href="#1-1-安装pm2" class="headerlink" title="1.1 安装pm2"></a>1.1 安装<code>pm2</code></h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pm2</span><br></pre></td></tr></table></figure>
+<p>ps：如果感兴趣也可以了解下<code>Linux</code>的<code>nohup</code>命令</p>
+<h6 id="1-2-在hexo创建run-js文件"><a href="#1-2-在hexo创建run-js文件" class="headerlink" title="1.2 在hexo创建run.js文件"></a>1.2 在<code>hexo</code>创建<code>run.js</code>文件</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//run.js</span><br><span class="line">const &#123; exec &#125; = require(&apos;child_process&apos;)</span><br><span class="line">exec(&apos;hexo server&apos;,(error, stdout, stderr) =&gt; &#123;</span><br><span class="line">  if(error)&#123;</span><br><span class="line">    console.log(`exec error: $&#123;error&#125;`)</span><br><span class="line">    return</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(`stdout: $&#123;stdout&#125;`);</span><br><span class="line">  console.log(`stderr: $&#123;stderr&#125;`);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h6 id="1-3-运行脚本"><a href="#1-3-运行脚本" class="headerlink" title="1.3 运行脚本"></a>1.3 运行脚本</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start run.js</span><br></pre></td></tr></table></figure>
+<h5 id="2-为自己的博客添加萌宠"><a href="#2-为自己的博客添加萌宠" class="headerlink" title="2.为自己的博客添加萌宠"></a>2.为自己的博客添加萌宠</h5><p>参考博客：<a href="https://blog.csdn.net/u010820857/article/details/82270736" target="_blank" rel="noopener">https://blog.csdn.net/u010820857/article/details/82270736</a></p>
+<h6 id="2-0-安装模块"><a href="#2-0-安装模块" class="headerlink" title="2.0 安装模块"></a>2.0 安装模块</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-helper-live2d</span><br></pre></td></tr></table></figure>
+<h6 id="2-1-选择想要的萌宠"><a href="#2-1-选择想要的萌宠" class="headerlink" title="2.1 选择想要的萌宠"></a>2.1 选择想要的萌宠</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">live2d-widget-model-chitose</span><br><span class="line">live2d-widget-model-epsilon2_1</span><br><span class="line">live2d-widget-model-gf</span><br><span class="line">live2d-widget-model-haru/01 (use npm install --save live2d-widget-model-haru)</span><br><span class="line">live2d-widget-model-haru/02 (use npm install --save live2d-widget-model-haru)</span><br><span class="line">live2d-widget-model-haruto</span><br><span class="line">live2d-widget-model-hibiki</span><br><span class="line">live2d-widget-model-hijiki</span><br><span class="line">live2d-widget-model-izumi</span><br><span class="line">live2d-widget-model-koharu</span><br><span class="line">live2d-widget-model-miku</span><br><span class="line">live2d-widget-model-ni-j</span><br><span class="line">live2d-widget-model-nico</span><br><span class="line">live2d-widget-model-nietzsche</span><br><span class="line">live2d-widget-model-nipsilon</span><br><span class="line">live2d-widget-model-nito</span><br><span class="line">live2d-widget-model-shizuku</span><br><span class="line">live2d-widget-model-tororo</span><br><span class="line">live2d-widget-model-tsumiki</span><br><span class="line">live2d-widget-model-unitychan</span><br><span class="line">live2d-widget-model-wanko</span><br><span class="line">live2d-widget-model-z16</span><br></pre></td></tr></table></figure>
+<h6 id="2-2-选择好之后还需要安装"><a href="#2-2-选择好之后还需要安装" class="headerlink" title="2.2 选择好之后还需要安装"></a>2.2 选择好之后还需要安装</h6><p>例如我选择的是：<code>live2d-widget-model-z16</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install live2d-widget-model-z16</span><br></pre></td></tr></table></figure></p>
+<h6 id="2-3-最后一步配置Hexo的主配置文件-config-yml"><a href="#2-3-最后一步配置Hexo的主配置文件-config-yml" class="headerlink" title="2.3 最后一步配置Hexo的主配置文件_config.yml"></a>2.3 最后一步配置<code>Hexo</code>的主配置文件<code>_config.yml</code></h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">live2d:</span><br><span class="line">  enable: true</span><br><span class="line">  scriptFrom: local</span><br><span class="line">  model:</span><br><span class="line">    use: live2d-widget-model-z16 // 这里改为自己选择的萌宠 其他参数可以根据自己喜好看着修改</span><br><span class="line">  display:</span><br><span class="line">    position: right</span><br><span class="line">    width: 150</span><br><span class="line">    height: 300</span><br><span class="line">  mobile:</span><br><span class="line">    show: true</span><br></pre></td></tr></table></figure>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-云服务器部署Hexo"><span class="toc-text">1.云服务器部署Hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-0-后台运行Hexo"><span class="toc-text">1.0 后台运行Hexo</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#1-1-安装pm2"><span class="toc-text">1.1 安装pm2</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#1-2-在hexo创建run-js文件"><span class="toc-text">1.2 在hexo创建run.js文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#1-3-运行脚本"><span class="toc-text">1.3 运行脚本</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-为自己的博客添加萌宠"><span class="toc-text">2.为自己的博客添加萌宠</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#2-0-安装模块"><span class="toc-text">2.0 安装模块</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-1-选择想要的萌宠"><span class="toc-text">2.1 选择想要的萌宠</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-2-选择好之后还需要安装"><span class="toc-text">2.2 选择好之后还需要安装</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-3-最后一步配置Hexo的主配置文件-config-yml"><span class="toc-text">2.3 最后一步配置Hexo的主配置文件_config.yml</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 卢国峥</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://yoursite.com/2019/03/30/Hexo瞎折腾系列/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/Hexo/"><i class="fa fa-tags"></i>Hexo</a>
+     
+      <a href="/tags/博客/"><i class="fa fa-tags"></i>博客</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="#" target="_self">#</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: lgz_silent@163.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechat.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.png" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/2019/03/29/集合面试题/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/z16.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
