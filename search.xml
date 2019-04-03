@@ -21,12 +21,12 @@
         <category>面试题</category>
       </categories>
       <tags>
-        <tag>面试题</tag>
         <tag>java</tag>
+        <tag>面试题</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Docker-安装(CentOS7)]]></title>
+    <title><![CDATA[docker-安装(CentOS7)]]></title>
     <url>%2F2019%2F03%2F27%2FUntitled%2F</url>
     <content type="text"><![CDATA[1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2 ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker//有则删除对应的包yum remove docker ...... 1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2 ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker//有则删除对应的包yum remove docker ...... 2.设置yum源(阿里源)1yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 3.查看yum库中有没有docker-ce1yum list | grep docker-ce 4.安装docker1yum install -y docker-ce 5.如果需要设置开机自动启动12345 //先启动docker服务端systemctl start docker//启动docker服务开机自启systemctl enable docker 6.校验docker是否启动成功1docker version 常见问题: 普通用户运行docker 命令会报错: 由于docker daemon需要绑定到主机的 Unix socket 而不是普通的TCP端口,而 Unix socket 的宿主为 root 用户,如果其他用户使用 docker 命令只有在命令钱添加 sudo 才能执行成功,如果不想每次使用 docker 命令是还要多敲 sudo ,可以按照下面的方法解决:s 1.切换到 root 用户 2.把普通用户添加到 docker 组 3.再切换到&lt;普通用户&gt; 4.验证 docker 命令是否成功]]></content>
       <categories>
