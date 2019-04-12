@@ -25,19 +25,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[集合面试题]]></title>
-    <url>%2F2019%2F03%2F29%2F%E9%9B%86%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98%2F</url>
-    <content type="text"><![CDATA[整理 HashSet/ArrayList/HashMap 集合相关一些基础知识 涉及面试遇到的一些面试题~!1Collection/Colections 面试题:Collection和Collections的区别. ==Collections类:封装了Set,List,Map的操作的工具方法.== 12345常用的集合类: HashSet/ArrayList/HashMap都是线程不安全的,在多线程环境下不安全. 在Collections类中有获取线程安全的集合方法: ==Collections中获取安全的用法:== 123Set set = Collections.synchronizedSet(new HashSet());Map map = Collections.synchronizedMap(new HashMap()); Collection: 超级接口 子接口包括List 和 Set 1234超级接口:当父接口的抽象方法不能满足使用要求的时候,子接口继承父接口后可以添加自己的抽象方法源代码中的一小节:List子接口继承Collection接口public interface List&lt;E&gt; extends Collection&lt;E&gt; ==Set,List,Map三种集合并不是都一直是单独使用的,偶尔也会综合使用.== List与Set的区别:子接口(只是一个子接口)123456List: 允许元素重复,记录先后添加顺序Set: 不允许元素重复,不记录先后添加顺序 LInkedHashSet特例: 采用哈希算法不能重复,链表算法维持先后顺序 1List 1允许元素重复,记录先后添加顺序 List的实现类: LinkedList与ArrayList性能对比:1234ArrayList:(为什么?) 查询,更改更快,新增和删除较慢LinkedList: 查询,更改较慢,新增和删除较快 1Set 1不允许元素重复,不记录先后添加顺序 注意: 必须小心操作可变对象,如果一个Set中的可变元素改变了自身状态导致Object.equals(Object)= true,将导致一些问题. HashSet: 123456不保证元素的先后添加顺序.底层才有的是哈希表算法,查询效率极高.判断两个对象是否相等的规则: 1):equals比较为true. 2):hashCode值相同.要求:要求存在在哈希中的对象元素都得覆盖equals和hashCode方法. ==LinkedHashSet: (继承HashSet)== 一般很少用如果要求一个集合既要保证元素不重复,也需要记录添加先后顺序,才选择使用LinkedHashSetHashSet的子类,底层也采用的是哈希表算法,但是也使用了链表算法来维持元素的先后添加顺序. ==判断两个对象是否相等的规则和HashSet相同.== 因为需要多使用一个链表俩记录元素的顺序,所以性能相对于HashSet较低.一般少用, 如果要求一个集合既要保证元素不重复,也需要记录添加先后顺序,才选择使用LinkedHashSet. TreeSet: 不保证元素的先后添加顺序,但是会对集合中的元素做排序操作.底层才有红黑树算法(树结构,比较擅长做范围查询). TreeSet要么才有自然排序,要么定制排序. 自然排序:要求在TreeSet集合中的对象必须实现java.lang.Comparable接口,并覆盖compareTo方 定制排序:要求在构建TreeSet对象的时候,传入一个比较器对象(必须实现java.lang.Comparator接口)在比较器中覆盖compare方法,并编写比较规则. ==TreeSet判断元素对象重复的规则:== compareTo/compare方法是否返回0.如果返回0,则视为是同一个对象.1Map HashMap: 采用哈希表算法, 此时Map中的key不会保证添加的先后顺序,key也不允许重复.key判断重复的标准是: key1和key2是否equals为true,并且hashCode相等. TreeMap: 12采用红黑树算法,此时Map中的key会按照自然顺序或定制排序进行排序,,key也不允许重复.key判断重复的标准是: compareTo/compare的返回值是否为0. ==LinkedHashMap: (继承HashMap)== 采用链表和哈希表算法,此时Map中的key会保证先后添加的顺序,key不允许重复key判断重复的标准和HashMap中的key的标准相同. Properties: 12Hashtable (打死不用的实现类) 的子类,此时要求key和value都是String类型.用来加载资源文件(properties文件(IO再讲)).]]></content>
-      <categories>
-        <category>java基础</category>
-        <category>面试题</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>面试题</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[docker-安装(CentOS7)]]></title>
     <url>%2F2019%2F03%2F27%2FUntitled%2F</url>
     <content type="text"><![CDATA[CentOS7docker安装步骤 1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2 ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker//有则删除对应的包yum remove docker ...... 1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2 ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker//有则删除对应的包yum remove docker ...... 2.设置yum源(阿里源)1yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 3.查看yum库中有没有docker-ce1yum list | grep docker-ce 4.安装docker1yum install -y docker-ce 5.如果需要设置开机自动启动12345 //先启动docker服务端systemctl start docker//启动docker服务开机自启systemctl enable docker 6.校验docker是否启动成功1docker version 常见问题: 普通用户运行docker 命令会报错: 由于docker daemon需要绑定到主机的 Unix socket 而不是普通的TCP端口,而 Unix socket 的宿主为 root 用户,如果其他用户使用 docker 命令只有在命令钱添加 sudo 才能执行成功,如果不想每次使用 docker 命令是还要多敲 sudo ,可以按照下面的方法解决:s 1.切换到 root 用户 2.把普通用户添加到 docker 组 3.再切换到&lt;普通用户&gt; 4.验证 docker 命令是否成功]]></content>
