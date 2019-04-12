@@ -15,7 +15,7 @@
   
 
   
-  <meta name="description" content="1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker//有则删除对应的包yum remove docker ......">
+  <meta name="description" content="CentOS7docker安装步骤">
 
   
 
@@ -163,7 +163,12 @@
   </h1>
   
   <article class="passage-article">
-    <p>1.安装需要的软件包:yum-util提供yum-config-manager功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure></p>
+    <p></p>
+
+<p>1.安装需要的软件包:yum-util提供yum-config-manager功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure></p>
+<p>ps:如果安装过docker,需要重装可以先删除在装:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 查看是否有安装</span><br><span class="line">dockeryum list installed | grep docker</span><br><span class="line"></span><br><span class="line">//有则删除对应的包</span><br><span class="line">yum remove docker ......</span><br></pre></td></tr></table></figure></p>
+<!-- more -->
+<p>1.安装需要的软件包:yum-util提供yum-config-manager功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure></p>
 <p>ps:如果安装过docker,需要重装可以先删除在装:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 查看是否有安装</span><br><span class="line">dockeryum list installed | grep docker</span><br><span class="line"></span><br><span class="line">//有则删除对应的包</span><br><span class="line">yum remove docker ......</span><br></pre></td></tr></table></figure></p>
 <p><br><br>2.设置yum源(阿里源)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure></p>
 <p><br><br>3.查看yum库中有没有docker-ce<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list | grep docker-ce</span><br></pre></td></tr></table></figure></p>
