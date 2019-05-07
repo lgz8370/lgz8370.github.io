@@ -1,63 +1,162 @@
-(() => {
-  function openGoogle(keywords) {
-    keywords = `site:${window.location.hostname} ${decodeURIComponent(keywords)}`;
-    let href = `https://www.google.com/search?q=${keywords}`;
-    window.open(href);
-  }
+(function ($) {
+    // Search ------------
+    var $searchWrap = $('.search-form-wrap'),
+        isSearchAnim = false,
+        searchAnimDuration = 200;
 
-  const searchBtn = document.querySelector('#site-search'),
-    nav = document.querySelector('#site-nav'),
-    navBtn = document.querySelector('#site-nav-btn'),
-    layer = document.querySelector('#site-layer'),
-    layerContent = layer.querySelector('.site-layer-content'),
-    title = document.querySelector('#site-layer-title'),
-    searchDOM = document.querySelector('#site-layer-search');
+    var startSearchAnim = function () {
+        isSearchAnim = true;
+    };
 
-  const inputDOM = searchDOM.querySelector('input'),
-    iconDOM = searchDOM.querySelector('i');
+    var stopSearchAnim = function (callback) {
+        setTimeout(function () {
+            isSearchAnim = false;
+            callback && callback();
+        }, searchAnimDuration);
+    };
 
-  searchBtn.addEventListener('click', (e) => {
-    layer.style.display = 'block';
-    searchDOM.style.display = 'flex';
-    inputDOM.focus();
-    title.innerHTML = '搜索';
-
-    window.AD_CONFIG.layer.add(() => {
-      title.innerHTML = '';
-      inputDOM.blur();
-      searchDOM.style.display = 'none';
+    $('.nav-item-search').on('click', function () {
+        if (isSearchAnim) return;
+        startSearchAnim();
+        $searchWrap.addClass('on');
+        stopSearchAnim(function () {
+            $('.local-search-input').focus();
+        });
     });
-  });
 
-  inputDOM.addEventListener('keypress', (e) => {
-    let key = e.which || e.keyCode,
-      value = inputDOM.value.trim();
-
-    if(key === 13 && value.length > 0) {
-      openGoogle(value);
-    }
-  });
-
-  iconDOM.addEventListener('click', (e) => {
-    inputDOM.focus();
-    let value = inputDOM.value.trim();
-    if(value.length > 0) {
-      openGoogle(value);
-    }
-  });
-
-  navBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    layer.style.display = 'block';
-    layerContent.style.display = 'none';
-    nav.style.right = '0';
-
-    window.AD_CONFIG.layer.add(() => {
-      nav.style.right = '';
-      layer.style.display = 'none';
-      layerContent.style.display = '';
+    $(document).mouseup(function (e) {
+        var _con = $('.local-search');
+        if (!_con.is(e.target) && _con.has(e.target).length === 0) {
+            $searchWrap.removeClass('on');
+        }
     });
-  });
-  
-})();
+
+    // 移动设备侦测
+    var isMobile = {
+        Android: function () {
+            return navigator.userAgent.match(/Android/i);
+        },
+        BlackBerry: function () {
+            return navigator.userAgent.match(/BlackBerry/i);
+        },
+        iOS: function () {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        },
+        Opera: function () {
+            return navigator.userAgent.match(/Opera Mini/i);
+        },
+        Windows: function () {
+            return navigator.userAgent.match(/IEMobile/i);
+        },
+        any: function () {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+        }
+    };
+    // 建议在移动端不初始化，其实 /search.xml 文件还挺大的，
+    if ($('.local-search').size() && !isMobile.any()) {
+        $.getScript('/js/search.js', function () {
+            searchFunc("/search.xml", 'local-search-input', 'local-search-result');
+        });
+    }
+
+    // Share ------------
+    $('body').on('click', function () {
+        $('.article-share-box.on').removeClass('on');
+    }).on('click', '.article-share-link', function (e) {
+        e.stopPropagation();
+
+        var $this = $(this),
+            url = $this.attr('data-url'),
+            encodedUrl = encodeURIComponent(url),
+            id = 'article-share-box-' + $this.attr('data-id'),
+            offset = $this.offset();
+
+        if ($('#' + id).length) {
+            var box = $('#' + id);
+
+            if (box.hasClass('on')) {
+                box.removeClass('on');
+                return;
+            }
+        } else {
+            var html = [
+                '<div id="' + id + '" class="article-share-box">',
+                '<input class="article-share-input" value="' + url + '">',
+                '<div class="article-share-links">',
+                '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                '</div>',
+                '</div>'
+            ].join('');
+
+            var box = $(html);
+            $('body').append(box);
+        }
+        $('.article-share-box.on').hide();
+
+        box.css({
+            top: offset.top + 25,
+            left: offset.left
+        }).addClass('on');
+    }).on('click', '.article-share-box', function (e) {
+        e.stopPropagation();
+    }).on('click', '.article-share-box-input', function () {
+        $(this).select();
+    }).on('click', '.article-share-box-link', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+    });
+
+    // fancybox
+    if ($.fancybox) {
+        $('[data-fancybox]').fancybox({
+            protect: true
+        });
+    }
+
+    // lazyload
+    //$(".lazy").lazyload();
+
+    //
+    $(document).ready(function ($) {
+        $(".anchor").click(function (event) {
+            event.preventDefault();
+            $('html,body').animate({scrollTop: $(this.hash).offset().top}, 500);
+        });
+    });
+
+    // Mobile nav
+    var $content = $('.content'),
+        $sidebar = $('.sidebar'),
+        isMobileNavAnim = false,
+        mobileNavAnimDuration = 200;
+
+    var startMobileNavAnim = function () {
+        isMobileNavAnim = true;
+    };
+
+    var stopMobileNavAnim = function () {
+        setTimeout(function () {
+            isMobileNavAnim = false;
+        }, mobileNavAnimDuration);
+    };
+
+    $('.navbar-toggle').on('click', function () {
+        if (isMobileNavAnim) return;
+        startMobileNavAnim();
+        $content.toggleClass('on');
+        $sidebar.toggleClass('on');
+        stopMobileNavAnim();
+    });
+
+    $($content).on('click', function () {
+        if (isMobileNavAnim || !$content.hasClass('on')) return;
+        $content.removeClass('on');
+        $sidebar.removeClass('on');
+    });
+
+})(jQuery);

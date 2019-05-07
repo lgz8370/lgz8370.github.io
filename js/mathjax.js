@@ -11,7 +11,7 @@
     tex2jax: {
       inlineMath: [["$", "$"], ["\\(", "\\)"]], //行内公式选择符
       displayMath: [["$$", "$$"], ["\\[", "\\]"]], //段内公式选择符
-      skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+      skipTags: ["script", "noscript", "style", "textarea", "a"] //避开某些标签
     },
     "HTML-CSS": {
       availableFonts: ["STIX", "TeX"], //可选字体
