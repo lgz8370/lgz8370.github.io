@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[ZK分布式锁]]></title>
+    <url>%2F2019%2F05%2F17%2FZK%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%2F</url>
+    <content type="text"><![CDATA[只做记录介绍使用curator客户端操作zookeeper引入依赖123456789&lt;!-- 版本号 --&gt;&lt;curator.version&gt;4.0.0&lt;/curator.version&gt;&lt;!-- ZK客户端:curator --&gt;&lt;dependency&gt; &lt;groupId&gt;org.apache.curator&lt;/groupId&gt; &lt;artifactId&gt;curator-recipes&lt;/artifactId&gt; &lt;version&gt;$&#123;curator.version&#125;&lt;/version&gt;&lt;/dependency&gt;zookeeper相关依赖1234567891011121314&lt;!-- 版本号 --&gt;&lt;zookeeper.version&gt;3.4.10&lt;/zookeeper.version&gt;&lt;zkclient.version&gt;0.10&lt;/zkclient.version&gt;&lt;dependency&gt; &lt;groupId&gt;com.101tec&lt;/groupId&gt; &lt;artifactId&gt;zkclient&lt;/artifactId&gt; &lt;version&gt;$&#123;zkclient.version&#125;&lt;/version&gt;&lt;/dependency&gt;&lt;dependency&gt; &lt;groupId&gt;org.apache.zookeeper&lt;/groupId&gt; &lt;artifactId&gt;zookeeper&lt;/artifactId&gt; &lt;version&gt;$&#123;zookeeper.version&#125;&lt;/version&gt;&lt;/dependency&gt;代码实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768/** * @author LuGuoZheng * @date 2019/5/15 13:33 * @Version 3.0 * @description */public class ZKLock &#123; /** * zk客户端 */ public static CuratorFramework client = null; public InterProcessMutex mutex = null; /** * 初始化zk客户端 */ static &#123; System.out.println("开始初始化zk客户端"); // 重试策略:重试3次,每次重试间隔1s RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3); client = CuratorFrameworkFactory.builder() .connectString("139.159.253.188:2181")// zk地址 .sessionTimeoutMs(15000) // 会话超时时间 .connectionTimeoutMs(30000) // 连接超时时间 .retryPolicy(retryPolicy) // 重试策略 .namespace("YL_LGZ") // 名称 .build(); // 启动zk客户端连接zk client.start(); &#125; /** * * @param code 节点名称 */ public void init(String code) &#123; System.out.println("创建节点对象"); mutex = new InterProcessMutex(client, code); &#125; /** * 加锁:互斥锁 */ public void lock()&#123; try &#123; mutex.acquire(); &#125; catch (Exception e) &#123; e.printStackTrace(); System.out.println("枷锁失败"); &#125; &#125; /** * 释放锁 */ public void unLock() &#123; try &#123; mutex.release(); &#125; catch (Exception e) &#123; e.printStackTrace(); System.out.println("释放锁失败"); &#125; &#125;&#125;测试123456789101112131415161718192021222324/** * @author LuGuoZheng * @date 2019/5/15 15:06 * @Version 3.0 * @description */public class TestLock extends ZKLock &#123; public TestLock()&#123; super.init("/LGZ_TEST_CODE"); &#125; @Test public void test() throws InterruptedException &#123; TestLock testLock = new TestLock(); try &#123; testLock.lock(); System.out.println(""); Thread.sleep(5000); &#125; finally &#123; testLock.unLock(); System.out.println("释放成功"); &#125; &#125;&#125;]]></content>
+      <categories>
+        <category>中间件</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>分布式锁</tag>
+        <tag>zookeeper</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[zk命令]]></title>
     <url>%2F2019%2F05%2F15%2Fzk%E5%91%BD%E4%BB%A4%2F</url>
     <content type="text"><![CDATA[zk操作命令连接客户端1[root@ecs-e339-0002 bin]# ./zkCli.shls查看命令1[zk: localhost:2181(CONNECTED) 2] ls /]]></content>
