@@ -1,6 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Docker 简单部署 ElasticSearch]]></title>
+    <url>%2F2019%2F07%2F02%2FDocker-%E7%AE%80%E5%8D%95%E9%83%A8%E7%BD%B2-ElasticSearch%2F</url>
+    <content type="text"><![CDATA[一、ElasticSearch是什么?Elasticsearch也使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是通过简单的RESTful API来隐藏Lucene的复杂性，从而让全文搜索变得简单。不过，Elasticsearch不仅仅是Lucene和全文搜索，我们还能这样去描述它：分布式的实时文件存储，每个字段都被索引并可被搜索分布式的实时分析搜索引擎可以扩展到上百台服务器，处理PB级结构化或非结构化数据一、ElasticSearch是什么?Elasticsearch也使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是通过简单的RESTful API来隐藏Lucene的复杂性，从而让全文搜索变得简单。不过，Elasticsearch不仅仅是Lucene和全文搜索，我们还能这样去描述它：分布式的实时文件存储，每个字段都被索引并可被搜索分布式的实时分析搜索引擎可以扩展到上百台服务器，处理PB级结构化或非结构化数据二、Docker 部署 ElasticSearch2.1 拉取镜像1docker pull docker.elastic.co/elasticsearch/elasticsearch:7.0.02.2 运行容器ElasticSearch的默认端口是9200，我们把宿主环境9200端口映射到Docker容器中的9200端口，就可以访问到Docker容器中的ElasticSearch服务了，同时我们把这个容器命名为es。1docker run -d --name es -p 9200:9200 -p 9300:9300 -e &quot;discovery.type=single-node&quot; &lt;容器ID&gt;2.3 配置跨域2.3.1 进入容器由于要进行配置，因此需要进入容器当中修改相应的配置信息。1docker exec -it es /bin/bash2.3.2 进行配置123456789101112131415161718192021# 显示文件ls结果如下：LICENSE.txt README.textile config lib modulesNOTICE.txt bin data logs plugins# 进入配置文件夹cd config# 显示文件ls结果如下：elasticsearch.keystore ingest-geoip log4j2.properties roles.yml users_roleselasticsearch.yml jvm.options role_mapping.yml users# 修改配置文件vi elasticsearch.yml# 加入跨域配置http.cors.enabled: truehttp.cors.allow-origin: &quot;*&quot;2.3 重启容器由于修改了配置，因此需要重启ElasticSearch容器。1docker restart es展示如下：三、Docker 部署 ElasticSearch-Head为什么要安装ElasticSearch-Head呢，原因是需要有一个管理界面进行查看ElasticSearch相关信息3.1 拉取镜像1docker pull mobz/elasticsearch-head:53.2 运行容器1docker run -d --name es_admin -p 9100:9100 mobz/elasticsearch-head:5展示如下：这样，我们就完成了用Docker提供Elasticsearch服务，而不污染宿主机环境了，这样还有一个好处，如果想同时启动多个不同版本的Elastcsearch或者其他服务，Docker也是一个理想的解决方案。原文出处:https://www.cnblogs.com/jianxuanbing/p/9410800.html]]></content>
+      <categories>
+        <category>ElasticSearch系列</category>
+      </categories>
+      <tags>
+        <tag>ElasticSearch</tag>
+        <tag>转载</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[dubbo隐式参数丢失问题]]></title>
+    <url>%2F2019%2F06%2F29%2Fdubbo%E9%9A%90%E5%BC%8F%E5%8F%82%E6%95%B0%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98%2F</url>
+    <content type="text"><![CDATA[记录在消费端连续调用两次远程服务导致隐式参数丢失问题~!演示代码controller层12345678910111213141516@Controller@RequestMapping("/test")public class TestController &#123; @Reference private ICarService iCarService; @RequestMapping("/test") @ResponseBody public String test()&#123; // 传递参数 RpcContext.getContext().setAttachment("TOKEN","测试隐士参数传递"); iCarService.test(); return "参数"; &#125;&#125;服务层123456789101112131415161718192021@Service(retries = -1)public class CeshiServiceImpl implements ICeshiService &#123; private static final Logger logger = LoggerFactory.getLogger(CeshiServiceImpl.class); @Reference private ICarService iCarService; @Reference private IUserInfoService iUserInfoService; @Override public void test() &#123; String token = RpcContext.getContext().getAttachment("TOKEN"); logger.info("token信息:&#123;&#125;", token); // 第一次调用rpc服务 iCarService.test(); logger.info("token信息:&#123;&#125;", RpcContext.getContext().getAttachment("TOKEN")); // 第二次调用rpc服务 iUserInfoService.test(); &#125;&#125;ICarServiceImpl12345678910@Service(retries = -1)public class CarServiceImpl implements ICarService &#123; private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class); public void test() &#123; String token = RpcContext.getContext().getAttachment("TOKEN"); logger.info("carService:&#123;&#125;",token); &#125;&#125;userInfoServiceImpl1234567891011@Service(retries = -1)@Transactionalpublic class UserInfoServiceImpl implements IUserInfoService &#123; private static final Logger logger = LoggerFactory.getLogger(UserInfoServiceImpl.class); public void test() &#123; String token = RpcContext.getContext().getAttachment("TOKEN"); logger.info("userInfoService:&#123;&#125;",token); &#125; &#125;打印结果ceshiService结果ICarServiceImpl结果userInfoServiceImpl结果源码12345678910111213141516171819202122@Activate(group = Constants.CONSUMER, order = -10000)public class ConsumerContextFilter implements Filter &#123; public Result invoke(Invoker&lt;?&gt; invoker, Invocation invocation) throws RpcException &#123; RpcContext.getContext() .setInvoker(invoker) .setInvocation(invocation) .setLocalAddress(NetUtils.getLocalHost(), 0) .setRemoteAddress(invoker.getUrl().getHost(), invoker.getUrl().getPort()); if (invocation instanceof RpcInvocation) &#123; ((RpcInvocation) invocation).setInvoker(invoker); &#125; try &#123; return invoker.invoke(invocation); &#125; finally &#123; // 清空隐式参数 RpcContext.getContext().clearAttachments(); &#125; &#125;&#125;消费端在执行Rpc调用之前，经过Filter处理, 会将信息写入RpcContex,而且在每次调用rpc后都会把隐式参数清空,所以在第二次调用rpc就无法拿到之前的隐式参数了拓展Filter何时进行url过滤filter（过滤器）作用于在intreceptor(拦截器)之前，不像intreceptor一样依赖于springmvc框架，只需要依赖于serverlet。]]></content>
+      <categories>
+        <category>Dubbo系列</category>
+      </categories>
+      <tags>
+        <tag>dubbo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker基本命令使用]]></title>
+    <url>%2F2019%2F06%2F24%2Fdocker%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%2F</url>
+    <content type="text"><![CDATA[记录docker常用命令查看本地镜像列表1docker images查看运行中的容器1docker ps查看所有容器(包括未运行的)1docker ps -a删除镜像1docker rmi &lt;镜像ID&gt;run命令docker run [参数] [镜像id] | [镜像名]:[镜像标签] [命令]-i 表示容器的输入终端保持打开,不直接关闭-t 表示开启一个虚拟终端, 绑定到标准输入上-d 表示让该容器在后台运行–name 给该容器起一个容器名，如果没有此参数，则有一个默认的容器名–rm 停止该容器时，把容器删除掉使用镜像运行容器1docker run -it --name &lt;容器名称&gt; -d -p &lt;port:port&gt; &lt;镜像ID&gt;启动容器1docker start &lt;容器ID&gt;停止容器1docker stop &lt;容器ID&gt;删除容器1docker rm &lt;容器ID&gt;查看docker的所有容器运行状态1docker stats进入容器里面1docker exec -it &lt;容器ID&gt; /bin/bash查看容器运行日志(类似 tail -f 命令)1docker logs]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 JConsole 监控 springboot 项目]]></title>
+    <url>%2F2019%2F06%2F24%2F%E4%BD%BF%E7%94%A8-JConsole-%E7%9B%91%E6%8E%A7-springboot-%E9%A1%B9%E7%9B%AE%2F</url>
+    <content type="text"><![CDATA[JConsole 使用记录~!添加启动参数1234567nohup java -jar -Djava.rmi.server.hostname=x.x.x.x # 服务ip-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 # 端口(不能与服务端口冲突)-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xms200m -Xmx200m ylcloud-item-service-0.0.1-SNAPSHOT.jar &gt; /pro/test/home/yanfa/nohup_item.out &amp; 2&gt;&amp;1 &amp;启动JConsole直接在windows命令窗口输入JConsole选择远程进程输入对应的ip:port即可]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[dubbo重试机制]]></title>
+    <url>%2F2019%2F06%2F15%2FDubbo%E9%87%8D%E8%AF%95%E6%9C%BA%E5%88%B6%2F</url>
+    <content type="text"><![CDATA[DUBBO中文官方文档记录Dubbo重试机制配置~!DUBBO中文官方文档默认重试次数: 2在官方文档中有介绍到dubbo的重试次数默认是2属性对应URL参数类型是否必填缺省值作用描述兼容性retriesretriesint可选2性能调优远程服务调用重试次数，不包括第一次调用，不需要重试请设为02.0.0以上版本修改重试次数duboo-provider.xml配置方式: 在dubbo:service配置retries参数123&lt;!--常用菜单推荐--&gt;&lt;dubbo:service ref="userMenuClickFacade" interface="com.ylcloud.user.facade.UserMenuClickFacade" retries="1"/&gt;&lt;bean id="userMenuClickFacade" class="com.ylcloud.user.facade.impl.UserMenuClickFacadeImpl"/&gt;使用注解如果使用的@Service配置重试次数,不设置retries参数,那么该参数默认值是0,但是不管显示配置retries为0,还是不显示设置,0都是使用dubbo默认的重试次数如果要配置重试次数为0,只有把retries小于0才会起作用如果使用@Reference引用服务时配置了retries,重试次数以改次数为准只有显示设置retries大于或等于1才会起作用dubbo相关代码(dubbo版本:2.6.1)package com.alibaba.dubbo.rpc.cluster.support.FailoverClusterInvoker;1234567891011public Result doInvoke(Invocation invocation, final List&lt;Invoker&lt;T&gt;&gt; invokers, LoadBalance loadbalance) throws RpcException &#123; List&lt;Invoker&lt;T&gt;&gt; copyinvokers = invokers; checkInvokers(copyinvokers, invocation); // len:最多调用次数--&gt; 重试次数 + 1 int len = getUrl().getMethodParameter(invocation.getMethodName(), Constants.RETRIES_KEY, Constants.DEFAULT_RETRIES) + 1; // 控制至少调用一次:即重试次数为 0 if (len &lt;= 0) &#123; len = 1; &#125; /** 部分源码省略**/&#125;dubbo注册服务相关代码package com.alibaba.dubbo.config.AbstractConfig;123456789101112131415protected void appendAnnotation(Class&lt;?&gt; annotationClass, Object annotation) &#123; /** 省略部分代码 **/ // 获取直接配置的数据 Object value = method.invoke(annotation, new Object[0]); // 如果不为空并且不等于默认值,则注册url中 if (value != null &amp;&amp; !value.equals(method.getDefaultValue())) &#123; /** 省略部分代码 **/ &#125; /** 省略部分代码 **/ &#125;所以如果使用注解配置重试次数,如果配置的是默认值,则不会注册到url中,会使用dubbo默认的值]]></content>
+      <categories>
+        <category>Dubbo系列</category>
+      </categories>
+      <tags>
+        <tag>dubbo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Nginx+ffmpeg搭建推流服务器]]></title>
+    <url>%2F2019%2F06%2F14%2FNginx-ffmpeg%E6%90%AD%E5%BB%BA%E6%8E%A8%E6%B5%81%E6%9C%8D%E5%8A%A1%E5%99%A8%2F</url>
+    <content type="text"><![CDATA[环境👇:CentOS7搭建推流服务器~!安装Nginx(忽略)略直接进入到Nginx的解压目录// 参考:这是我目录1cd /usr/local/softs/nginx-1.10.1目录下面的内容:下载nginx-rtmp-module,并解压123wget https://github.com/arut/nginx-rtmp-module/archive/master.zipunzip master.zip先备份Nginx(稳点来)1cp objs/nginx /usr/local/nginx/sbin/nginx重新配置Nginx123./configure --with-http_ssl_module --add-module=/usr/local/softs/nginx-1.10.1/nginx-rtmp-module-mastermakePS: 用make,不要使用make install,不然会覆盖已经添加的模块(网上是这么说的,但是好像没有效果,我之前装了ssl模块的,直接就给我覆盖掉了)因为我之前就加了个ssl模块,所有我直接在配置上加上了,不过之前也有备份将新的nginx覆盖旧安装目录1cp objs/nginx /usr/local/nginx/sbin/nginx修改Nginx配置文件(nginx.conf)123456789101112rtmp &#123; #RTMP服务 server &#123; listen 1935; #//服务端口 chunk_size 4096; #//数据传输块的大小 application vod &#123; play /opt/video; #//视频文件存放位置。 &#125; application live&#123; #直播 live on; &#125; &#125;&#125;PS: rtmp是一个单独的模块,不要放在http里面重启Nginx123cd /usr/local/nginx/sbin./nginx -s reload安装EPEL Release，因为安装需要使用其他的repo源，所以需要EPEL支持1yum install -y epel-release安装完成之后，可以查看是否安装成功1yum repolist安装nux-dextop 源1rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm安装ffmpeg1yum install -y ffmpeg安装完成后检查ffmpeg 版本1ffmpeg -version测试1ffmpeg -re -i lgz.mp4 -c copy -f flv rtmp://localhost:1935/live/film使用VLC1rtmp://&#123;你的服务IP&#125;:1935/live/film]]></content>
+      <categories>
+        <category>服务器系列</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+        <tag>推流服务器</tag>
+        <tag>ffmpeg</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[结束Windows占用端口进程]]></title>
+    <url>%2F2019%2F06%2F12%2F%E7%BB%93%E6%9D%9FWindows%E5%8D%A0%E7%94%A8%E7%AB%AF%E5%8F%A3%E8%BF%9B%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[netstat -ano | findstr 80 //列出进程极其占用的端口，且包含 80tasklist | findstr 9268taskkill -PID &lt;进程号&gt; -F //强制关闭某个进程]]></content>
+      <tags>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[SQL函数使用记录]]></title>
+    <url>%2F2019%2F06%2F06%2FQL%E5%87%BD%E6%95%B0%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95%2F</url>
+    <content type="text"><![CDATA[sql函数使用记录~!SUM函数中使用case统计t1.groupNumber大于2的数量12345678SELECT IF(SUM(case when t1.groupNumber &gt; 2 then 1 else 0 end) / COUNT(t1.groupNumber),SUM(case when t1.groupNumber &gt; 2 then 1 else 0 end) / COUNT(t1.groupNumber),0) AS fgl FROM (SELECT COUNT(visitor_code) groupNumber FROM sales_order WHERE scomp_code = 'G0000001' GROUP BY visitor_code) t1;格式化日期分组查询函数描述DATE_FORMAT(creater_time,’%Y-%m’)订货日期(日)DATE_FORMAT(creater_time,’%Y-%m-%d’)订货日期(月)1SELECT COUNT(1),DATE_FORMAT(creater_time,'%Y-%m-%d') FROM patrolshop_plan GROUP BY DATE_FORMAT(creater_time,'%Y-%m-%d')日效果:月效果:]]></content>
+      <categories>
+        <category>MySQL数据库系列</category>
+      </categories>
+      <tags>
+        <tag>SQL函数</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[xml文件注释注意事项]]></title>
+    <url>%2F2019%2F06%2F06%2Fxml%E6%96%87%E4%BB%B6%E6%B3%A8%E9%87%8A%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%2F</url>
+    <content type="text"><![CDATA[记录一个调试中偶然碰到的问题~!在mapper.xml文件中注释语句必须使用&lt;!-- --&gt;在一次调试中直接在mapper.xml顺手使用CTRL + /了快捷键注释:#符号然而那一行代码也是变灰了也就没留意在访问的时候直接报错了之后换成&lt;!-- --&gt;即可]]></content>
+      <categories>
+        <category>BUG系列</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Sourcetree 更新git账号密码]]></title>
+    <url>%2F2019%2F05%2F31%2Fsourectree%E4%BD%BF%E7%94%A8%2F</url>
+    <content type="text"><![CDATA[Sourcetree记录~!更新git密码使用sourcetree时登录git账号,git账号修改了密码后sourcetree在提交/拉取代码时只会报错,并不会弹出git登录窗口让用户重新登录.解决方法: windows进入以下目录,删除passwd文件1C:\Users\USERNAME\AppData\Local\Atlassian\SourceTree删除文件后,再次拉取/提交代码就会弹出git登录窗口修改git登录名称sourcetree重新登录git时无法修改用户名称解决方法: windows进入上面目录,修改userhosts文件对应的登录名称即可]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ZK分布式锁]]></title>
     <url>%2F2019%2F05%2F17%2FZK%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%2F</url>
     <content type="text"><![CDATA[只做记录介绍使用curator客户端操作zookeeper引入依赖123456789&lt;!-- 版本号 --&gt;&lt;curator.version&gt;4.0.0&lt;/curator.version&gt;&lt;!-- ZK客户端:curator --&gt;&lt;dependency&gt; &lt;groupId&gt;org.apache.curator&lt;/groupId&gt; &lt;artifactId&gt;curator-recipes&lt;/artifactId&gt; &lt;version&gt;$&#123;curator.version&#125;&lt;/version&gt;&lt;/dependency&gt;zookeeper相关依赖1234567891011121314&lt;!-- 版本号 --&gt;&lt;zookeeper.version&gt;3.4.10&lt;/zookeeper.version&gt;&lt;zkclient.version&gt;0.10&lt;/zkclient.version&gt;&lt;dependency&gt; &lt;groupId&gt;com.101tec&lt;/groupId&gt; &lt;artifactId&gt;zkclient&lt;/artifactId&gt; &lt;version&gt;$&#123;zkclient.version&#125;&lt;/version&gt;&lt;/dependency&gt;&lt;dependency&gt; &lt;groupId&gt;org.apache.zookeeper&lt;/groupId&gt; &lt;artifactId&gt;zookeeper&lt;/artifactId&gt; &lt;version&gt;$&#123;zookeeper.version&#125;&lt;/version&gt;&lt;/dependency&gt;代码实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768/** * @author LuGuoZheng * @date 2019/5/15 13:33 * @Version 3.0 * @description */public class ZKLock &#123; /** * zk客户端 */ public static CuratorFramework client = null; public InterProcessMutex mutex = null; /** * 初始化zk客户端 */ static &#123; System.out.println("开始初始化zk客户端"); // 重试策略:重试3次,每次重试间隔1s RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3); client = CuratorFrameworkFactory.builder() .connectString("139.159.253.188:2181")// zk地址 .sessionTimeoutMs(15000) // 会话超时时间 .connectionTimeoutMs(30000) // 连接超时时间 .retryPolicy(retryPolicy) // 重试策略 .namespace("YL_LGZ") // 名称 .build(); // 启动zk客户端连接zk client.start(); &#125; /** * * @param code 节点名称 */ public void init(String code) &#123; System.out.println("创建节点对象"); mutex = new InterProcessMutex(client, code); &#125; /** * 加锁:互斥锁 */ public void lock()&#123; try &#123; mutex.acquire(); &#125; catch (Exception e) &#123; e.printStackTrace(); System.out.println("枷锁失败"); &#125; &#125; /** * 释放锁 */ public void unLock() &#123; try &#123; mutex.release(); &#125; catch (Exception e) &#123; e.printStackTrace(); System.out.println("释放锁失败"); &#125; &#125;&#125;测试123456789101112131415161718192021222324/** * @author LuGuoZheng * @date 2019/5/15 15:06 * @Version 3.0 * @description */public class TestLock extends ZKLock &#123; public TestLock()&#123; super.init("/LGZ_TEST_CODE"); &#125; @Test public void test() throws InterruptedException &#123; TestLock testLock = new TestLock(); try &#123; testLock.lock(); System.out.println(""); Thread.sleep(5000); &#125; finally &#123; testLock.unLock(); System.out.println("释放成功"); &#125; &#125;&#125;]]></content>
@@ -16,7 +120,7 @@
   <entry>
     <title><![CDATA[zk命令]]></title>
     <url>%2F2019%2F05%2F15%2Fzk%E5%91%BD%E4%BB%A4%2F</url>
-    <content type="text"><![CDATA[zk操作命令连接客户端1[root@ecs-e339-0002 bin]# ./zkCli.shls查看命令1[zk: localhost:2181(CONNECTED) 2] ls /]]></content>
+    <content type="text"><![CDATA[zk操作命令启动zk1./zkServer.sh start连接客户端1[root@ecs-e339-0002 bin]# ./zkCli.shls查看命令1[zk: localhost:2181(CONNECTED) 2] ls /]]></content>
       <categories>
         <category>中间件</category>
       </categories>
@@ -80,7 +184,7 @@
   <entry>
     <title><![CDATA[Linux相关命令]]></title>
     <url>%2F2019%2F04%2F26%2FLinux%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4%2F</url>
-    <content type="text"><![CDATA[如题记录不常用的Linux命令运行java项目1nohup java -jar -Xms10m -Xmx200m ylcloud-item-service-0.0.1-SNAPSHOT.jar &gt; /pro/test/home/yanfa/nohup_item.out &amp; 2&gt;&amp;1 &amp;nohup: 后台启动项目-Xms10m -Xmx200m: jvm虚拟机参数查看某端口占用的线程的pid1netstat -nlp |grep :4000查看pid占用的端口号1netstat -nap | grep 32716二. 防火墙2.1 查看所有打开的端口1firewall-cmd --zone=public --list-ports2.2 开启端口（–permanent参数为永久生效，不加则重启后失效）1firewall-cmd --zone=public --add-port=端口号/tcp --permanent2.3 更新防火墙规则：1firewall-cmd --reload查看安装目录1which git]]></content>
+    <content type="text"><![CDATA[如题记录不常用的Linux命令运行java项目1nohup java -jar -Xms10m -Xmx200m ylcloud-item-service-0.0.1-SNAPSHOT.jar &gt; /pro/test/home/yanfa/nohup_item.out &amp; 2&gt;&amp;1 &amp;nohup: 后台启动项目-Xms10m -Xmx200m: jvm虚拟机参数查看某端口占用的线程的pid1netstat -nlp |grep :4000查看pid占用的端口号1netstat -nap | grep 32716二. 防火墙2.1 查看所有打开的端口1firewall-cmd --zone=public --list-ports2.2 开启端口（–permanent参数为永久生效，不加则重启后失效）1firewall-cmd --zone=public --add-port=端口号/tcp --permanent2.3 更新防火墙规则：1firewall-cmd --reload查看安装目录1which git查看文件大小1du -sh *重启nginx在sbin目录下执行命令1./nginx -s reloadVI操作VI操作:用的是键盘的左边的数字键逐字符移动:行内跳转:右边的数字键0:跳转到行首(编辑模式)$(Shift+4): 跳转到行尾(编辑模式)^(Shift+6): 跳转到行首的第一个字母位置(编辑模式)行间跳转:(末行模式)gg: 跳转到文件第一行(编辑模式)G(Shift+g): 跳到文件的最后一行(编辑模式)直接输入行号就可以跳转到对应行注意:可以先把行号显示出来:set number在编辑模式下:ctrl+f 向下翻一页 forwardctrl+b 向上翻一页 backwarddd: 删除光标所在行 (编辑模式)3dd:从光标行开始删除3行(编辑模式)——1,4d 删除第一行到第四行(末行模式)u 撤销上一个操作(编辑模式)yy 复制光标所在行 (编辑模式)2yy 从光标行开始复制2行(编辑模式)p: 粘贴命令末行模式:文件的查找/parttern 从前往后查找?parttern 从后往前查找n: 下一个匹配的字符串N: 上一个匹配的字符串g:全局替换i:忽略大小写%s/f/F/gi创建文件vi 文件名touch 文件名创建目录mkdir 目录名mkdir -p 目录名1/目录名2 创建层级目录 可以是相对目录,也可以是绝对目录rm 文件名rm -f 文件名rm -fr 目录 删除目录必须使用 -r 递归删除拷贝: cp拷贝目录的话要带上参数-r移动: mv]]></content>
       <categories>
         <category>服务器系列</category>
       </categories>
@@ -141,7 +245,7 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Dubbo隐式参数传递]]></title>
+    <title><![CDATA[dubbo隐式参数传递]]></title>
     <url>%2F2019%2F04%2F17%2FDobbu%E9%9A%90%E5%BC%8F%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%2F</url>
     <content type="text"><![CDATA[记录一个dobbu传递隐式参数demo,调用RPC服务时用于服务消费者向服务提供者传递隐式参数,比如向服务提供者传递token信息.上下文信息RpcContext是一个ThreadLocal的临时状态记录器，当接收到RPC请求，或发起RPC请求时，RpcContext的状态都会变化。比如A调用B，B再调用C，则B机器上，在B调用C之前，RpcContext记录的是A调用B的信息，在B调用C之后，RpcContext记录的是B调用C。服务消费者:controller层12345678910111213141516@Controller@RequestMapping("/test")public class TestController &#123; @Reference private ICarService iCarService; @RequestMapping("/test") @ResponseBody public String test()&#123; // 传递参数 RpcContext.getContext().setAttachment("TOKEN","测试隐士参数传递"); iCarService.test(); return "参数"; &#125;&#125;服务提供者:service层接口123public interface ICarService &#123; void test();&#125;实现类123456789@Service@Transactionalpublic class CarServiceImpl implements ICarService &#123; public void test() &#123; // 获取参数 String token = RpcContext.getContext().getAttachment("TOKEN"); System.out.println(token); &#125;&#125;项目使用场景在项目中使用的是登录后,会生成一个token返回给用户,用户每次登录都要把改token带过来进行登录验证,验证通过后则去调用RPC服务,可以通过隐士参数传递把token传递到服务提供者,这样就可以获取到当前登录用户的token,然后去获取当前登录用户信息.注意如果使用setAttachments会把原来的参数清空,后再保存现在的参数.源码123456789public RpcContext setAttachments(Map&lt;String, String&gt; attachment) &#123; // 清空参数 this.attachments.clear(); if (attachment != null &amp;&amp; attachment.size() &gt; 0) &#123; this.attachments.putAll(attachment); &#125; return this;&#125;]]></content>
       <categories>
@@ -204,7 +308,7 @@
   <entry>
     <title><![CDATA[docker-安装(CentOS7)]]></title>
     <url>%2F2019%2F03%2F27%2FUntitled%2F</url>
-    <content type="text"><![CDATA[CentOS7docker安装步骤1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker//有则删除对应的包yum remove docker ......1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker//有则删除对应的包yum remove docker ......2.设置yum源(阿里源)1yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo3.查看yum库中有没有docker-ce1yum list | grep docker-ce4.安装docker1yum install -y docker-ce5.如果需要设置开机自动启动12345 //先启动docker服务端systemctl start docker//启动docker服务开机自启systemctl enable docker6.校验docker是否启动成功1docker version常见问题: 普通用户运行docker 命令会报错:由于docker daemon需要绑定到主机的 Unix socket 而不是普通的TCP端口,而 Unix socket 的宿主为 root 用户,如果其他用户使用 docker 命令只有在命令钱添加 sudo 才能执行成功,如果不想每次使用 docker 命令是还要多敲 sudo ,可以按照下面的方法解决:s1.切换到 root 用户2.把普通用户添加到 docker 组3.再切换到&lt;普通用户&gt;4.验证 docker 命令是否成功]]></content>
+    <content type="text"><![CDATA[CentOS7docker安装步骤1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker //有则删除对应的包yum remove docker ......1.安装需要的软件包:yum-util提供yum-config-manager功能1yum install -y yum-utils device-mapper-persistent-data lvm2ps:如果安装过docker,需要重装可以先删除在装:12345// 查看是否有安装dockeryum list installed | grep docker //有则删除对应的包yum remove docker ......2.设置yum源(阿里源)1yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo3.查看yum库中有没有docker-ce1yum list | grep docker-ce4.安装docker1yum install -y docker-ce5.如果需要设置开机自动启动12345//先启动docker服务端systemctl start docker//启动docker服务开机自启systemctl enable docker6.校验docker是否启动成功1docker version常见问题: 普通用户运行docker 命令会报错:由于docker daemon需要绑定到主机的 Unix socket 而不是普通的TCP端口,而 Unix socket 的宿主为 root 用户,如果其他用户使用 docker 命令只有在命令钱添加 sudo 才能执行成功,如果不想每次使用 docker 命令是还要多敲 sudo ,可以按照下面的方法解决:s1.切换到 root 用户2.把普通用户添加到 docker 组3.再切换到&lt;普通用户&gt;4.验证 docker 命令是否成功]]></content>
       <categories>
         <category>docker容器系列</category>
       </categories>
