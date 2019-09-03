@@ -5,14 +5,14 @@
 
   const { is_post, page_type } = window.AD_CONFIG;
 
-  document
-    .querySelectorAll('.passage-article')
-    .forEach(
-      passage => 
-        passage
-          .querySelectorAll('img')
-          .forEach(image => image.addEventListener('click', handleImgClick))
-    );
+//  document
+//    .querySelectorAll('.passage-article')
+//    .forEach(
+//      passage => 
+//        passage
+//          .querySelectorAll('img')
+//          .forEach(image => image.addEventListener('click', handleImgClick))
+//    );
 
   if(!is_post && ['about', 'friends'].includes(page_type) === false) {
     return;
