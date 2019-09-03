@@ -23,11 +23,12 @@
     toc = document.querySelector('#site-toc'),
     tocShowBtn = document.querySelector('#site-toc-show-btn'),
     tocHideBtn = document.querySelector('#site-toc-hide-btn');
-
+    // 默认显示目录
+    toc.style.right = '0';
   tocShowBtn && tocShowBtn.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    layer.style.display = 'block';
+    layer.style.display = 'none';
     layerContent.style.display = 'none';
     toc.style.right = '0';
 
@@ -37,6 +38,9 @@
       layerContent.style.display = '';
     });
   });
-  
+  // 隐藏目录
+  $("#site-toc-hide-btn").click(function () {
+    toc.style.right = '';
+  })
   tocHideBtn && tocHideBtn.addEventListener('click', window.AD_CONFIG.layer.trigger);
 })();
