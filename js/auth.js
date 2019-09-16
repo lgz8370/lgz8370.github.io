@@ -27,13 +27,13 @@
   };
 
   // print github and demo info
-  console.log(
-    '\n%c Theme-AD v2.4.0 %c' + 
-    ' 🎉 https://github.com/dongyuanxin/theme-ad 🎉\n' + 
-    '\n%c Preview Online %c' + 
-    ' 🔍 https://godbmw.com/ 🔍  \n' , 
-    'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', ''
-  );
+//  console.log(
+//    '\n%c Theme-AD v2.4.0 %c' + 
+//    ' 🎉 https://github.com/dongyuanxin/theme-ad 🎉\n' + 
+//    '\n%c Preview Online %c' + 
+//    ' 🔍 https://godbmw.com/ 🔍  \n' , 
+//    'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', ''
+//  );
 
   // article password auth
   auth();

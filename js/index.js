@@ -124,7 +124,6 @@
       url: `https://www.lgzblog.com/message.json`,
       dataType: "json",
       success: function(  result) {
-    console.log(result);
         $.each(result.mouseover, function(index, tips) {
           $(tips.selector).mouseover(function() {
             var text = tips.text;

@@ -1,6 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Hexo添加代码复制功能]]></title>
+    <url>%2F2019%2F09%2F08%2FHexo%E6%B7%BB%E5%8A%A0%E4%BB%A3%E7%A0%81%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD%2F</url>
+    <content type="text"><![CDATA[记录Hexo添加代码复制功能~!1. 在js目录添加clipboard.min.js文件clipboard.min.js2.在js目录添加cpbutt.js文件1234567891011121314151617181920212223242526272829303132$(function () &#123; $('table').each(function (i, e) &#123; var $wrap = $('&lt;div&gt;').addClass('highlight-wrap'); $(e).after($wrap); $wrap.append($('&lt;button&gt;').addClass('copy-btn').append('复制').on('click', function (e) &#123; var code = $(this).parent().find('.code').find('.line').map(function (i, e) &#123; return $(e).text(); &#125;).toArray().join('\n'); var ta = document.createElement('textarea'); var yPosition = window.pageYOffset || document.documentElement.scrollTop; ta.style.top = yPosition + 'px'; // Prevent page scroll ta.style.position = 'absolute'; ta.style.opacity = '0'; ta.readOnly = true; ta.value = code; document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, code.length); ta.readOnly = false; var result = document.execCommand('copy'); if (result) $(this).text('复制成功'); else $(this).text('复制失败'); ta.blur(); // For iOS $(this).blur(); &#125;)).on('mouseleave', function (e) &#123; var $b = $(this).find('.copy-btn'); setTimeout(function () &#123; $b.text('复制'); &#125;, 300); &#125;).append(e); &#125;);&#125;)Ps:记得引入连个js文件]]></content>
+      <categories>
+        <category>Hexo之瞎折腾系列</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>博客</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Hexo添加伊布模型]]></title>
+    <url>%2F2019%2F09%2F08%2FHexo%E6%B7%BB%E5%8A%A0%E4%BC%8A%E5%B8%83%E6%A8%A1%E5%9E%8B%2F</url>
+    <content type="text"><![CDATA[记录Hexo添加伊布模型~!1. 在layout.ejs中加入以下html代码片段123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263&lt;div class="eevee"&gt; &lt;div class="message"&gt;嗨，你好啊~~&lt;/div&gt; &lt;div class="body"&gt; &lt;div class="head"&gt; &lt;div class="ears"&gt; &lt;div class="ear"&gt; &lt;div class="lobe"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="ear"&gt; &lt;div class="lobe"&gt;&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class="face"&gt; &lt;div class="eyes"&gt; &lt;div class="eye"&gt; &lt;div class="eyelid"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="eye"&gt; &lt;div class="eyelid"&gt;&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class="nose"&gt;&lt;/div&gt; &lt;div class="mouth"&gt;&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class="chest"&gt; &lt;div class="fur"&gt; &lt;div class="patch"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="fur"&gt; &lt;div class="patch"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="fur"&gt; &lt;div class="patch"&gt;&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class="legs"&gt; &lt;div class="leg"&gt; &lt;div class="inner-leg"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="leg"&gt; &lt;div class="inner-leg"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="leg"&gt; &lt;div class="inner-leg"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="leg"&gt; &lt;div class="inner-leg"&gt;&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class="tail"&gt; &lt;div class="tail"&gt; &lt;div class="tail"&gt; &lt;div class="tail"&gt; &lt;div class="tail"&gt; &lt;div class="tail -end"&gt;&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;&lt;/div&gt;2. js相关代码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697(() =&gt; &#123;// 伊布复制消息 document.addEventListener('copy', function (e) &#123; showMessage('&lt;span style="color:red;"&gt;你都复制了些什么呀，转载要记得加上出处哦~~&lt;/span&gt;', 5000); var seletedText = window.getSelection() if (seletedText.toString().length &lt; 88) &#123; return &#125; addCopyright(e) e.preventDefault() &#125;) function renderTip(template, context) &#123; var tokenReg = /(\\)?\&#123;([^\&#123;\&#125;\\]+)(\\)?\&#125;/g; return template.replace(tokenReg, function (word, slash1, token, slash2) &#123; if (slash1 || slash2) &#123; return word.replace('\\', ''); &#125; var variables = token.replace(/\s/g, '').split('.'); var currentObject = context; var i, length, variable; for (i = 0, length = variables.length; i &lt; length; ++i) &#123; variable = variables[i]; currentObject = currentObject[variable]; if (currentObject === undefined || currentObject === null) return ''; &#125; return currentObject; &#125;); &#125; String.prototype.renderTip = function (context) &#123; return renderTip(this, context); &#125;; function initTips() &#123; $.ajax(&#123; cache: true, url: `http://localhost:4000/message.json`, dataType: "json", success: function (result) &#123; console.log(result); $.each(result.mouseover, function (index, tips) &#123; $(tips.selector).mouseover(function () &#123; var text = tips.text; if (Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1) - 1]; text = text.renderTip(&#123; text: $(this).text() &#125;); showMessage(text, 3000); &#125;); &#125;); $.each(result.click, function (index, tips) &#123; $(tips.selector).click(function () &#123; var text = tips.text; if (Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1) - 1]; text = text.renderTip(&#123; text: $(this).text() &#125;); showMessage(text, 3000); &#125;); &#125;); &#125; &#125;); &#125;// 初始化消息 initTips(); function showMessage(text, timeout) &#123; if (Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1) - 1]; $('.message').stop(); $('.message').html(text).fadeTo(200, 1); timeout = timeout || 5000; hideMessage(timeout); &#125; function hideMessage(timeout) &#123; $('.message').stop().css('opacity', 1); if (timeout === null) timeout = 5000; $('.message').delay(timeout).fadeTo(200, 0); &#125;&#125;)();window.setInterval(showHitokoto, 30000);function showHitokoto() &#123; $.getJSON('https://v1.hitokoto.cn/', function (result) &#123; showMessage(result.hitokoto, 5000); &#125;);&#125;function showHitokoto() &#123; $.getJSON('', function (result) &#123; showMessage(result.hitokoto, 5000); &#125;);&#125;]]></content>
+      <categories>
+        <category>Hexo之瞎折腾系列</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>博客</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[jenkins通过ssh发送文件或执行命令]]></title>
+    <url>%2F2019%2F09%2F07%2Fjenkins%E9%80%9A%E8%BF%87ssh%E5%8F%91%E9%80%81%E6%96%87%E4%BB%B6%E6%88%96%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[记录jenkins通过ssh执行命令配置~!1.需求:由于使用docker部署的jenkins,在项目构建完成之后,需要调用宿主机的shell脚本把服务启动起来2.在jenkins安装Publish over SSH插件系统管理 &gt; 插件管理 &gt; 可选插件: 搜索Publish over SSH,直接安装即可.3.配置Publish over SSH系统管理 &gt; 系统设置 &gt; Publish over SSH这里直接采用了登录账号和密码直接登录的,没有采用配置密钥的方式.PS:配置完后,可以点击右下角的测试按钮检查是否能连接上,如果成功即配置完成了,失败就检查下登录名和密码吧…4.Publish over SSH使用创建任务的时,在够建步骤中选择通过SSH发送文件或执行命令,]]></content>
+      <categories>
+        <category>测试服务器搭建记录</category>
+      </categories>
+      <tags>
+        <tag>jenkins</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux配置LD_LIBRARY_PATH环境变量]]></title>
+    <url>%2F2019%2F09%2F07%2FLinux%E9%85%8D%E7%BD%AELD-LIBRARY-PATH%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%2F</url>
+    <content type="text"><![CDATA[记录Linux配置LD_LIBRARY_PATH环境变量~!项目开发中有用到一些第三方的动态库(so),就需要把.so文件放置某个目录下,然后配置环境变量即可..修改/etc/profile文件.加入以下配置即可.1export LD_LIBRARY_PATH=/home/yanfa_ylcloud_java/solib:$LD_LIBRARY_PATH刷新配置1source /etc/profilePs:刷下配置后发现还是没有效果,需要重新启动项目..修改后:]]></content>
+      <categories>
+        <category>测试服务器搭建记录</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker部署jenkins]]></title>
+    <url>%2F2019%2F09%2F05%2Fdocker%E9%83%A8%E7%BD%B2jenkins%2F</url>
+    <content type="text"><![CDATA[使用docker部署jenkins,实现流水线部署项目~!jenkins容器地址:https://hub.docker.com/r/jenkins/jenkins使用docker部署jenkins,实现流水线部署项目~!jenkins容器地址:https://hub.docker.com/r/jenkins/jenkins1. 直接拉去官方镜像1docker pull jenkins/jenkins2. 启动jenkins1docker run -d -p 8081:8080 --name jenkins --privileged=true -v /home/softs/jenkins:/var/jenkins_home jenkins/jenkins:latest2.1 参数说明:-d: 后台运行容器-p: 把容器8080端口映射到宿主机8081端口,浏览器访问8081端口即可.–name: 容器的别名-v: 数据卷,把容器中的/var/jenkins_home目录映射到宿主机的/home/softs/jenkins`目录上,可以与宿主机共享空间2.2 进入容器获取jenkins初始密码123docker exec -it jenkins /bin/bashcat /var/jenkins_home/secrets/initialAdminPassword3. 配置jenkins系统管理 &gt; 全局工具配置JDK/Maven/Git:这里都是使用自动安装,也可用通过数据卷映射,使用宿主机的配置Ps:自动安装JDK需要通过Oracle等账号下载安装,没有就需要去注册一个..4. 新建任务测试接下来建立一个任务测试源码管理配置构建以及需要执行的命令配置5. 执行构建任务查看控制台:SUCCESS:表示构建成功.]]></content>
+      <categories>
+        <category>测试服务器搭建记录</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>jenkins</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Redis常用配置]]></title>
+    <url>%2F2019%2F09%2F04%2FRedis%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%2F</url>
+    <content type="text"><![CDATA[记录redis常用的配置~!把redis安装上去后，接下来我们来了解一下redis的常用配置。Redis的配置文件在redis安装目录中，文件名叫redis.conf我们已经把redis安装上去了，接下来我们来了解一下redis的常用配置。Redis的配置文件在redis安装目录中，文件名叫redis.conf1.端口:portport：服务的端口号，默认为63792.后台运行:daemonizedaemonize：后台运行，值为yes | no 默认为no3.密码:requirepassrequirepass：密码，默认是没有密码Ps:登录有密码的redis123redis-cli -p 6379 -a &lt;密码&gt;auth &lt;密码&gt;也可用登录redis命令设置密码,但这是一次性的,重启后失效12345// 设置密码config set requirepass test123// 获取密码config get requirepass4.保护模式:protected-modeprotected-mode：保护模式，值为es | no默认是yes，不能远程访问该redis服务，如果需要远程访问，则该为no。5.绑定的IP地址bind：绑定的IP地址，默认是绑定本机地址127.0.0.1，如果需要其他IP能访问到该redis服务，则在这个属性添加IP地址，或者直接把该属性注释掉，这样所有的IP地址都可以访问]]></content>
+      <categories>
+        <category>测试服务器搭建记录</category>
+      </categories>
+      <tags>
+        <tag>redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Redis安装]]></title>
+    <url>%2F2019%2F09%2F04%2FRedis%E5%AE%89%E8%A3%85%2F</url>
+    <content type="text"><![CDATA[Linux安装redis步骤记录~!1.安装gcc1yum install -y gcc2.下载所需的 redis 安装包，并上传至服务器1/home/softs/redis3.解压安装包1tar -zxvf redis.x.tar.gz4.进入 redis 根目录,执行编译与安装1make &amp;&amp; make install5.进入src目录，启动 redis 服务器1redis-server6.注册redis服务并设置后台运行1、修改redis.conf配置文件中的daemonize为yes2、找到 redis 根目录下面 utils 中的 redis_init_script 文件，并将其复制到 /etc/init.d/ 后重命名为 redis1cp /home/softs/reddis/utils/redis_init_script /etc/init.d/redis3、修改 /etc/init.d/redis 配置，将相关的 redis 路径已经配置文件路径修改为你自己的 redis 所在位置的路径即可。4、此时就可以后台的方式运行redis了，在任意地方执行Linux服务命令，后台运行redis服务：开启服务：service redis start关闭服务：service redis stopPS: （注意：如果redis设置了密码，那么需要在/etc/init.d/redis这个脚本文件stop项，把$CLIEXEC -P $REDISPORT shutdown这行配置添加一个密码：-a YouPassword）,否则redis将不能正常关闭。7. Redis客户端测试进入src目录，运行redis的客户端程序:redis-cli参数：-h 主机ip（不写的话默认本机）-p 端口（不写的话默认6379）-a 密码8. 开启远程连接1、把redis.conf配置文件的protected-mode属性修改为no，关闭redis的包含模式。2、把redis.conf配置文件的bind属性注释掉，让所有远程的IP都可以访问到该redis的服务。3、由于开启了远程连接，所以有必要设置redis的访问密码，不然的话安全性太低，在redis.conf配置文件中模式是没有密码这行配置的，需要添加密码的话则新增该属性：requirepass，属性值为密码字符串。4、开启6379网络端口，并重新加载防火墙规则。]]></content>
+      <categories>
+        <category>测试服务器搭建记录</category>
+      </categories>
+      <tags>
+        <tag>redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LocalDate操作时间]]></title>
     <url>%2F2019%2F08%2F10%2FLocalDate%E6%93%8D%E4%BD%9C%E6%97%B6%E9%97%B4%2F</url>
     <content type="text"><![CDATA[记录工具类API👇: 字符串转LocalDate 获取连续时间集合 获取连续时间集合12// 默认的时间格式public static final String DEFUALT_SHOT_TIME_FORMAT = "yyyy-MM-dd";12// 默认的时间格式public static final String DEFUALT_SHOT_TIME_FORMAT = "yyyy-MM-dd";1. 字符串转LocalDate123456789/** * * @param time 时间yyyy-MM-dd * @return */ public static LocalDateTime stringToLocalDate(String time) &#123; DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd"); return LocalDateTime.parse(time, df); &#125;2. 两个时间相差多少天123456789101112131415/** * 获取两个时间相差多少天 * * @param dates * @return */ public static long getDiffDays(String[] dates) &#123; if (dates.length &lt; 2) &#123; return 1; &#125; DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd"); LocalDate begin = LocalDate.parse(dates[0], fmt); LocalDate end = LocalDate.parse(dates[1], fmt); return end.toEpochDay() - begin.toEpochDay() + 1; &#125;3. 获取连续时间集合1234567891011121314151617/** * 数据填充 * 可操作: 天/周/月/年 * @param time 间隔天数 * @param begin 开始时间 * @return */ public static List&lt;String&gt; getRangeIncres2(long time, String begin) &#123; List&lt;String&gt; list = Lists.newArrayList(); DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd"); LocalDate localDate = LocalDate.parse(begin, fmt); for (int i = 0; i &lt; time; i++) &#123; list.add(localDate.plusDays(i).toString()); &#125; return list; &#125;]]></content>
@@ -115,7 +195,13 @@
   <entry>
     <title><![CDATA[docker基本命令使用]]></title>
     <url>%2F2019%2F06%2F24%2Fdocker%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%2F</url>
-    <content type="text"><![CDATA[记录docker常用命令查看本地镜像列表1docker images查看运行中的容器1docker ps查看所有容器(包括未运行的)1docker ps -a删除镜像1docker rmi &lt;镜像ID&gt;run命令docker run [参数] [镜像id] | [镜像名]:[镜像标签] [命令]-i 表示容器的输入终端保持打开,不直接关闭-t 表示开启一个虚拟终端, 绑定到标准输入上-d 表示让该容器在后台运行–name 给该容器起一个容器名，如果没有此参数，则有一个默认的容器名–rm 停止该容器时，把容器删除掉使用镜像运行容器1docker run -it --name &lt;容器名称&gt; -d -p &lt;port:port&gt; &lt;镜像ID&gt;启动容器1docker start &lt;容器ID&gt;停止容器1docker stop &lt;容器ID&gt;删除容器1docker rm &lt;容器ID&gt;查看docker的所有容器运行状态1docker stats进入容器里面1docker exec -it &lt;容器ID&gt; /bin/bash查看容器运行日志(类似 tail -f 命令)1docker logs]]></content>
+    <content type="text"><![CDATA[记录docker常用命令1. 查看本地镜像列表1docker images2. 查看运行中的容器1docker ps3. 查看所有容器(包括未运行的)1docker ps -a4. 删除镜像1docker rmi &lt;镜像ID&gt;5. run命令docker run [参数] [镜像id] | [镜像名]:[镜像标签] [命令]-i 表示容器的输入终端保持打开,不直接关闭-t 表示开启一个虚拟终端, 绑定到标准输入上-d 表示让该容器在后台运行–name 给该容器起一个容器名，如果没有此参数，则有一个默认的容器名–rm 停止该容器时，把容器删除掉6. 使用镜像运行容器1docker run -it --name &lt;容器名称&gt; -d -p &lt;port:port&gt; &lt;镜像ID&gt;7. 启动容器1docker start &lt;容器ID&gt;8. 停止容器1docker stop &lt;容器ID&gt;9. 删除容器1docker rm &lt;容器ID&gt;10. 查看docker的所有容器运行状态1docker stats11. 进入容器里面1docker exec -it &lt;容器ID&gt; /bin/bash12. 查看容器运行日志(类似 tail -f 命令)1docker logs -f &lt;容器ID/名称&gt;13. 构建镜像进入存放dockerfile目录,执行构建命令1docker build -t [镜像名]:[镜像标签] [存放dockerfile的目录]]]></content>
+      <categories>
+        <category>docker容器系列</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[使用 JConsole 监控 springboot 项目]]></title>
@@ -229,7 +315,7 @@
   <entry>
     <title><![CDATA[git命令]]></title>
     <url>%2F2019%2F05%2F13%2Fgit%E5%91%BD%E4%BB%A4-1%2F</url>
-    <content type="text"><![CDATA[记录常用的git命令删除已关联的远程仓库1git remote rm origin推送到远程仓库1234git pull origin master// 强行推送git pull origin master -f]]></content>
+    <content type="text"><![CDATA[记录常用的git命令删除已关联的远程仓库1git remote rm origin暂存到本地仓库1git commit -m &quot;add 3 files.&quot;推送到远程仓库1234git pull origin master// 强行推送git pull origin master -f]]></content>
       <tags>
         <tag>git</tag>
       </tags>
@@ -273,7 +359,7 @@
   <entry>
     <title><![CDATA[Linux相关命令]]></title>
     <url>%2F2019%2F04%2F26%2FLinux%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4%2F</url>
-    <content type="text"><![CDATA[如题记录不常用的Linux命令运行java项目1nohup java -jar -Xms10m -Xmx200m ylcloud-item-service-0.0.1-SNAPSHOT.jar &gt; /pro/test/home/yanfa/nohup_item.out &amp; 2&gt;&amp;1 &amp;nohup: 后台启动项目-Xms10m -Xmx200m: jvm虚拟机参数查看某端口占用的线程的pid1netstat -nlp |grep :4000查看pid占用的端口号1netstat -nap | grep 32716二. 防火墙2.1 查看所有打开的端口1firewall-cmd --zone=public --list-ports2.2 开启端口（–permanent参数为永久生效，不加则重启后失效）1firewall-cmd --zone=public --add-port=端口号/tcp --permanent2.3 更新防火墙规则：1firewall-cmd --reload查看安装目录1which git查看文件大小1du -sh *重启nginx在sbin目录下执行命令1./nginx -s reloadVI操作VI操作:用的是键盘的左边的数字键逐字符移动:行内跳转:右边的数字键0:跳转到行首(编辑模式)$(Shift+4): 跳转到行尾(编辑模式)^(Shift+6): 跳转到行首的第一个字母位置(编辑模式)行间跳转:(末行模式)gg: 跳转到文件第一行(编辑模式)G(Shift+g): 跳到文件的最后一行(编辑模式)直接输入行号就可以跳转到对应行注意:可以先把行号显示出来:set number在编辑模式下:ctrl+f 向下翻一页 forwardctrl+b 向上翻一页 backwarddd: 删除光标所在行 (编辑模式)3dd:从光标行开始删除3行(编辑模式)——1,4d 删除第一行到第四行(末行模式)u 撤销上一个操作(编辑模式)yy 复制光标所在行 (编辑模式)2yy 从光标行开始复制2行(编辑模式)p: 粘贴命令末行模式:文件的查找/parttern 从前往后查找?parttern 从后往前查找n: 下一个匹配的字符串N: 上一个匹配的字符串g:全局替换i:忽略大小写%s/f/F/gi创建文件vi 文件名touch 文件名创建目录mkdir 目录名mkdir -p 目录名1/目录名2 创建层级目录 可以是相对目录,也可以是绝对目录rm 文件名rm -f 文件名rm -fr 目录 删除目录必须使用 -r 递归删除拷贝: cp拷贝目录的话要带上参数-r移动: mv]]></content>
+    <content type="text"><![CDATA[如题记录不常用的Linux命令运行java项目1nohup java -jar -Xms10m -Xmx200m ylcloud-item-service-0.0.1-SNAPSHOT.jar &gt; /pro/test/home/yanfa/nohup_item.out &amp; 2&gt;&amp;1 &amp;nohup: 后台启动项目-Xms10m -Xmx200m: jvm虚拟机参数查看某端口占用的线程的pid1netstat -nlp |grep :4000查看pid占用的端口号1netstat -nap | grep 32716二. 防火墙2.1 查看所有打开的端口1firewall-cmd --zone=public --list-ports2.2 开启端口（–permanent参数为永久生效，不加则重启后失效）1firewall-cmd --zone=public --add-port=端口号/tcp --permanent2.3 更新防火墙规则：1firewall-cmd --reload2.4 查看防火墙状态123firewall-cmd --state###### 查看安装目录which git1##### 查看文件大小du -sh *123##### 重启``nginx``- 在``sbin``目录下执行命令./nginx -s reload`VI操作VI操作:用的是键盘的左边的数字键逐字符移动:行内跳转:右边的数字键0:跳转到行首(编辑模式)$(Shift+4): 跳转到行尾(编辑模式)^(Shift+6): 跳转到行首的第一个字母位置(编辑模式)行间跳转:(末行模式)gg: 跳转到文件第一行(编辑模式)G(Shift+g): 跳到文件的最后一行(编辑模式)直接输入行号就可以跳转到对应行注意:可以先把行号显示出来:set number在编辑模式下:ctrl+f 向下翻一页 forwardctrl+b 向上翻一页 backwarddd: 删除光标所在行 (编辑模式)3dd:从光标行开始删除3行(编辑模式)——1,4d 删除第一行到第四行(末行模式)u 撤销上一个操作(编辑模式)yy 复制光标所在行 (编辑模式)2yy 从光标行开始复制2行(编辑模式)p: 粘贴命令末行模式:文件的查找/parttern 从前往后查找?parttern 从后往前查找n: 下一个匹配的字符串N: 上一个匹配的字符串g:全局替换i:忽略大小写%s/f/F/gi创建文件vi 文件名touch 文件名创建目录mkdir 目录名mkdir -p 目录名1/目录名2 创建层级目录 可以是相对目录,也可以是绝对目录rm 文件名rm -f 文件名rm -fr 目录 删除目录必须使用 -r 递归删除拷贝: cp拷贝目录的话要带上参数-r移动: mv: mv]]></content>
       <categories>
         <category>服务器系列</category>
       </categories>
@@ -349,7 +435,6 @@
     <url>%2F2019%2F04%2F15%2F%E9%85%8D%E7%BD%AEmaven%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F%2F</url>
     <content type="text"><![CDATA[使用maven-jar-plugin和maven-dependency-plugin插件打包使用maven-jar-plugin和maven-dependency-plugin打包的原因及好处现在项目使用的springboot框架搭建的maven项目,由于使用jenkins自动部署项目,而且并没有配置单个模块部署,导致每次部署都要10来分钟,严重浪费时间,现在使用该插件打包后不用每次都使用jenkins部署,直接本地打包好之后替换掉服务器的jar就行,而且打包完可以看到jar是很小的,上传也很快1. 配置pom文件12345678910111213141516171819202122232425262728293031323334&lt;plugin&gt; &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt; &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt; &lt;configuration&gt; &lt;archive&gt; &lt;manifest&gt; &lt;!-- springboot启动类 --&gt; &lt;mainClass&gt;cn.lgz.shop.GoodsApp&lt;/mainClass&gt; &lt;addClasspath&gt;true&lt;/addClasspath&gt; &lt;classpathPrefix&gt;lib/&lt;/classpathPrefix&gt; &lt;/manifest&gt; &lt;/archive&gt; &lt;/configuration&gt;&lt;/plugin&gt;&lt;plugin&gt; &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt; &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt; &lt;version&gt;3.1.1&lt;/version&gt; &lt;executions&gt; &lt;execution&gt; &lt;id&gt;copy-dependencies&lt;/id&gt; &lt;phase&gt;package&lt;/phase&gt; &lt;goals&gt; &lt;goal&gt;copy-dependencies&lt;/goal&gt; &lt;/goals&gt; &lt;configuration&gt; &lt;outputDirectory&gt;$&#123;project.build.directory&#125;/lib&lt;/outputDirectory&gt; &lt;overWriteReleases&gt;false&lt;/overWriteReleases&gt; &lt;overWriteSnapshots&gt;false&lt;/overWriteSnapshots&gt; &lt;overWriteIfNewer&gt;true&lt;/overWriteIfNewer&gt; &lt;/configuration&gt; &lt;/execution&gt; &lt;/executions&gt;&lt;/plugin&gt;2. 打包效果打包后会把项目代码和依赖分离开来:依赖会打包到lib目录项目代码会打包成一个jar包]]></content>
       <categories>
-        <category>java</category>
         <category>工具配置相关</category>
       </categories>
       <tags>
@@ -390,8 +475,8 @@
         <category>Hexo之瞎折腾系列</category>
       </categories>
       <tags>
-        <tag>Hexo</tag>
         <tag>博客</tag>
+        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
