@@ -1,6 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Elasticsearch解决只能查询10000条数据方案]]></title>
+    <url>%2F2021%2F03%2F03%2FElasticsearch%E8%A7%A3%E5%86%B3%E5%8F%AA%E8%83%BD%E6%9F%A5%E8%AF%A210000%E6%9D%A1%E6%95%B0%E6%8D%AE%E6%96%B9%E6%A1%88%2F</url>
+    <content type="text"><![CDATA[es官方默认限制索引查询最多只能查询10000条数据，查询第10001条数据开始就会报错：Result window is too large, from + size must be less than or equal to但是很多时候10000数据不能满足项目的需求，所以我们就要解除这个限制。es官方默认限制索引查询最多只能查询10000条数据，查询第10001条数据开始就会报错：Result window is too large, from + size must be less than or equal to但是很多时候10000数据不能满足项目的需求，所以我们就要解除这个限制。解决方案：第一种办法.在kibana中执行,解除索引最大查询数的限制1234put _all/_settings &#123; &quot;index.max_result_window&quot;:200000 &#125;_all表示所有索引，针对单个索引的话修改成索引名称即可第二种办法:在创建索引的时候加上123456“settings”:&#123; &quot;index&quot;:&#123; &quot;max_result_window&quot;: 500000 &#125; &#125;但是修改完之后，通过api查询回来的totalhits还是只有10000条，解决如下 :在查询时候把 track_total_hits 设置为 true。track_total_hits 设置为false禁用跟踪匹配查询的总点击次数设置为true就会返回真实的命中条数。java代码在构建条件时候加上:1searchSourceBuilder.trackTotalHits(true);kibana查询1234567GET 索引名/_search &#123; &quot;query&quot;: &#123; &quot;match_all&quot;: &#123;&#125; &#125;, &quot;track_total_hits&quot;:true &#125;原文链接：https://blog.csdn.net/weixin_39641746/article/details/102514501]]></content>
+      <categories>
+        <category>ElasticSearch系列</category>
+      </categories>
+      <tags>
+        <tag>ElasticSearch </tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[maven常用参数及说明]]></title>
+    <url>%2F2020%2F11%2F16%2Fmaven%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E5%8F%8A%E8%AF%B4%E6%98%8E%2F</url>
+    <content type="text"><![CDATA[Maven常用参数及其说明paramdesc示例-D定义一个Properties属性-DpropertyName=propertyValue-P指定Profiles 配置文件的属性-Penv=test-U强制刷新本地仓库不存在release版和所有的snapshots版本。-UMaven常用参数及其说明paramdesc示例-D定义一个Properties属性-DpropertyName=propertyValue-P指定Profiles 配置文件的属性-Penv=test-U强制刷新本地仓库不存在release版和所有的snapshots版本。-U关于 -U对于release版本, 本地已经存在, 则不会重复下载对于snapshots版本, 不管本地是否存在, 都会强制刷新, 通过下载几个比较小的文件, 确定本地和远程仓库的版本是否一致, 再决定是否下载.]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[使用MavenHelper解决jar包冲突问题]]></title>
+    <url>%2F2020%2F08%2F01%2F%E4%BD%BF%E7%94%A8MavenHelper%E8%A7%A3%E5%86%B3jar%E5%8C%85%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98%2F</url>
+    <content type="text"><![CDATA[前言大家在项目中肯定有碰到过Maven的Jar包冲突问题，经常出现的场景为：本地运行报NoSuchMethodError，ClassNotFoundException。明明在依赖里有这个Jar包啊。怎么运行不了！？项目中明明定义着某个jar包版本为2.0.2，怎么打包之后变成2.5.0了！？A项目引xxx.jar包运行好好的，B项目同样引入xxx.jar后，运行报错了。。是B项目有问题，还是xxx.jar包有问题！？本地环境和测试环境运行的好好的，到了生产就报一堆NoSuchMethodError，是我人品有问题还是生产环境有问题！？这样的问题如果不熟悉maven依赖机制的同学排查起来，估计挺头痛的。而且maven依赖结构不好的项目，在引入新的Jar包时的风险也是巨大的。小则影响性能，大则引起生产发布和运行时异常。其实以上问题的根源都来自于Maven的Jar包冲突和使用不当的依赖传递。这篇文章我就好好分析下以下3个内容：依赖传递的原则和产生Jar包冲突的原理分析定位冲突以及解决Jar包冲突的几个简单技巧如何写一个干净依赖关系的POM文件原文地址: https://www.cnblogs.com/bryan31/p/13408479.html前言大家在项目中肯定有碰到过Maven的Jar包冲突问题，经常出现的场景为：本地运行报NoSuchMethodError，ClassNotFoundException。明明在依赖里有这个Jar包啊。怎么运行不了！？项目中明明定义着某个jar包版本为2.0.2，怎么打包之后变成2.5.0了！？A项目引xxx.jar包运行好好的，B项目同样引入xxx.jar后，运行报错了。。是B项目有问题，还是xxx.jar包有问题！？本地环境和测试环境运行的好好的，到了生产就报一堆NoSuchMethodError，是我人品有问题还是生产环境有问题！？这样的问题如果不熟悉maven依赖机制的同学排查起来，估计挺头痛的。而且maven依赖结构不好的项目，在引入新的Jar包时的风险也是巨大的。小则影响性能，大则引起生产发布和运行时异常。其实以上问题的根源都来自于Maven的Jar包冲突和使用不当的依赖传递。这篇文章我就好好分析下以下3个内容：依赖传递的原则和产生Jar包冲突的原理分析定位冲突以及解决Jar包冲突的几个简单技巧如何写一个干净依赖关系的POM文件依赖传递原则几乎所有的Jar包冲突都和依赖传递原则有关，所以我们先说Maven中的依赖传递原则：最短路径优先原则假如引入了2个Jar包A和B，都传递依赖了Z这个Jar包：A -&gt; X -&gt; Y -&gt; Z(2.5)B -&gt; X -&gt; Z(2.0)那其实最终生效的是Z(2.0)这个版本。因为他的路径更加短。如果我本地引用了Z(3.0)的包，那生效的就是3.0的版本。一样的道理。最先声明优先原则如果路径长短一样，优先选最先声明的那个。A -&gt; Z(3.0)B -&gt; Z(2.5)这里A最先声明，所以传递过来的Z选择用3.0版本的。Jar包冲突的原理假设我们项目中依赖了A和B两个Jar包。而A和B各自又有以下传递依赖A -&gt; X -&gt; Z(2.0)B -&gt; X -&gt; Y -&gt; Z(2.5)那最终系统中Z包就产生了冲突，2.0和2.5两个版本冲突。但是classpath中只会依赖一个版本的Z包。根据传递依赖的最短路径优先原则，最终依赖的应该是2.0版本。如果Y包中用了Z包2.5版本中新的method时候，当运行到这段逻辑的时候。就会报NoSuchMethodError了。因为本来依赖的是2.5版本，但是因为Jar包冲突Maven选择了2.0版本，2.0版本中又没有这个新的method，导致出错。但要注意的是，不是所有冲突都会引起运行异常。相反，大部分公司的项目都会有一些Jar包冲突，但其实没有造成运行时的问题。这是因为很多传递依赖的Jar包，不管是2.0版本也好，2.5版本也好，都可以运行。只有高版本Jar包不向下兼容，或者新增了某些低版本没有的API才有可能导致这样的问题定位冲突IDEA提供了一个maven依赖分析神器：Maven Helper用这个插件能很好的显示出项目中所有的依赖树和冲突这里面红色高亮的部分，就表明这个Jar包有了冲突。选中这个jar包，可以看到这2个版本的冲突的来源。上图的例子，表明cruator-client这个Jar包，有2个传递依赖，分别为2.5.0版本和4.0.1版本。冲突的描述为：omitted for conflict with 2.5.0. 由于与2.5.0版本冲突而被省略具体的层级在右边也一目了然了，所以maven最终根据最短路径优先原则选择了2.5.0版本，4.0.1版本被忽略。这时候有同学会问：本地环境我可以利用Maven Helper来定位，那么预生产或者生产环境呢。又没有IDEA，如何定位冲突的细节？ 可以利用mvn命令来解决：1mvn dependency:tree -Dverbose此处一定不要省略-Dverbose参数，要不然是不会显示被忽略的包的其实mvn命令行一样好用。非常清晰明确。解决Jar包冲突的几个实用技巧 排除法还是上面的那个例子，现在生效的是2.5.0，如果想生效4.0.1。只需要在2.5.0上面点exclude就行了。 版本锁定法如果很多个依赖都传递了Jar包A，涉及了很多个版本，但是你只想指定一个版本。用排除法一个个去exclude太麻烦，而且exclude在pom文件中也会体现，太多的话，也影响代码整洁和阅读感受。这时候需要用到版本锁定法何谓版本锁定法？公司的项目一般都会有父级pom，你想指定哪个版本只需要在你项目的父POM中(当然在本工程内也可以)定义如下：（还是举上个例子，指定4.0.1版本）1234567&lt;dependencyManagement&gt; &lt;dependency&gt; &lt;groupId&gt;org.apache.curator&lt;/groupId&gt; &lt;artifactId&gt;curator-client&lt;/artifactId&gt; &lt;version&gt;4.0.1&lt;/version&gt; &lt;/dependency&gt;&lt;/dependencyManagement&gt;锁定版本法可以打破2个依赖传递的原则，优先级为最高锁定版本后，依赖树为：都统一变成4.0.1，锁定版本有一个好处：版本锁定并不排除Jar包，而且显示的把所有版本不一致的Jar包变成统一一个版本，这样在阅读代码时比较友好。也不用忍受一大堆的exclude标签。如何写一个干净依赖关系的POM文件我本人是有些轻度代码洁癖的人，所以即便是pom文件的依赖关系也想干净而整洁。如何写好干净的POM呢，作者认为有几点技巧要注意：尽量在父POM中定义&lt;dependencyManagement&gt;，来进行本项目一些依赖版本的管理，这样可以从很大程度上解决一定的冲突,如果是提供给别人依赖的Jar包，尽可能不要传递依赖不必要的Jar包使用mvn dependency:analyze-only命令用于检测那些声明了但是没被使用的依赖，如有有一些是你自己声明的，那尽量去掉使用mvn dependency:analyze-duplicate命令用来分析重复定义的依赖，清理那些重复定义的依赖最后其实庞大的项目依赖传递也一定多。但是不管多复杂的依赖关系，看到不要害怕。就这么几条原则，细心的去分析，所有的依赖都有迹可循。这些传递依赖如果管理的好，能让你的维护成本大大降低。如果管不好，这群野孩子每一个都可能是引发下一个NoSuchMethodError的导火索。]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>转载</tag>
+        <tag>maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[位状态工具类]]></title>
+    <url>%2F2020%2F06%2F18%2F%E4%BD%8D%E7%8A%B6%E6%80%81%E5%B7%A5%E5%85%B7%E7%B1%BB%2F</url>
+    <content type="text"><![CDATA[工具记录~!采用二进制记录某条信息多个状态每一位记录一种状态: 0.不存在,1.存在状态工具记录~!1.位运算细节采用二进制记录某条信息多个状态每一位记录一种状态: 0.不存在,1.存在状态2.工具类实现12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455/** * @Author 此间 * @Date 2020/6/18 16:48 * @Description 证件审核状态类，记录工作室在平台证件审核中所有的状态。 */public class BitStatesUtils &#123; public final static Long OP_BIND_PHONE = 1L &lt;&lt; 0; // 用户绑定手机状态码 1 public final static Long OP_BIND_EMAIL = 1L &lt;&lt; 1; // 用户绑定邮箱状态码 2 public final static Long OP_BASIC_INFO = 1L &lt;&lt; 2; // 用户填写基本资料 4 public final static Long OP_REAL_AUTH = 1L &lt;&lt; 3; // 用户完成实名认证 8 public final static Long OP_VEDIO_AUTH = 1L &lt;&lt; 4; // 用户完成视频认证 16 = 1 * 2 * 2 * 2 * 2 public final static Long HAS_BIDREQUEST_IN_PROCESS = 1L &lt;&lt; 5;// 用户有一个借款在申请流程当中 32 /** * @param states * 所有状态值 * @param value * 需要判断状态值 * @return 是否存在 */ public static boolean hasState(long states, long value) &#123; return (states &amp; value) != 0; &#125; /** * @param states * 已有状态值 * @param value * 需要添加状态值 * @return 新的状态值 */ public static long addState(long states, long value) &#123; if (hasState(states, value)) &#123; return states; &#125; return (states | value); &#125; /** * @param states * 已有状态值 * @param value * 需要删除状态值 * @return 新的状态值 */ public static long removeState(long states, long value) &#123; if (!hasState(states, value)) &#123; return states; &#125; return states ^ value; &#125; public static void main(String[] a)&#123; System.out.println(removeState(63,32)); &#125;&#125;]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[代码提交规范]]></title>
+    <url>%2F2020%2F06%2F09%2F%E4%BB%A3%E7%A0%81%E6%8F%90%E4%BA%A4%E8%A7%84%E8%8C%83%2F</url>
+    <content type="text"><![CDATA[工作记录~!codeinfofeat: msg新功能featurefix: msg修复bugmerge: msgmergedocs: msg文档修改style: msg格式，不影响代码运行的变动refactor: msg重构即不是新增功能，也不是修改bug的代码变动test: msg增加测试chore: msg构建过程或辅助工具的变动rm: msg删除文件或代码pod: msgpod install / pod update podName工作记录~!代码提交规范codeinfofeat: msg新功能featurefix: msg修复bugmerge: msgmergedocs: msg文档修改style: msg格式，不影响代码运行的变动refactor: msg重构即不是新增功能，也不是修改bug的代码变动test: msg增加测试chore: msg构建过程或辅助工具的变动rm: msg删除文件或代码pod: msgpod install / pod update podName]]></content>
+      <tags>
+        <tag>git</tag>
+        <tag>sourcetree</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[git修改远程仓库的commit注释信息]]></title>
+    <url>%2F2020%2F06%2F03%2Fgit%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9push%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84commit%E6%B3%A8%E9%87%8A%E4%BF%A1%E6%81%AF%2F</url>
+    <content type="text"><![CDATA[1.修改最后一次的commit注释，输入指令：git rebase -i HEAD~1 ，点击回车键；2.然后将当前条的pick（左上角）修改为edit,保存.3.输入指令：git commit --amend4.顶部信息就是你要修改的commit注释5.输入指令：git rebase --continue6.强制提交到远程仓库：git push -f1.修改最后一次的commit注释，输入指令：1git rebase -i HEAD~12.然后将当前条的pick（左上角）修改为edit，保存.3.输入指令：1git commit --amend4.顶部信息就是你要修改的commit注释5.输入指令：1git rebase --continue6.强制提交到远程仓库：1git push -f]]></content>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[全局的日期转换类: string转date]]></title>
+    <url>%2F2020%2F05%2F09%2F%E5%85%A8%E5%B1%80%E7%9A%84%E6%97%A5%E6%9C%9F%E8%BD%AC%E6%8D%A2%E7%B1%BB-string-%E3%80%8Bdate%2F</url>
+    <content type="text"><![CDATA[记录~!1234567891011121314151617181920212223/** * 全局的日期转换类 string-》date */@Componentpublic class DateConvert implements Converter&lt;String, Date&gt; &#123; private String[] pattern = &#123;&quot;yyyy-MM-dd HH:mm:ss&quot;, &quot;yyyy-MM-dd&quot;&#125;; @Override public Date convert(String s) &#123; if (StringUtils.isNullOrEmpty(s)) &#123; return null; &#125; try &#123; if (s.contains(&quot;:&quot;)) &#123; return new SimpleDateFormat(pattern[0]).parse(s); &#125; else &#123; return new SimpleDateFormat(pattern[1]).parse(s); &#125; &#125; catch (Exception e) &#123; throw new SOAException(&quot;日期格式不正确，无法转换&quot; + s); &#125; &#125;&#125;记录~!1234567891011121314151617181920212223/** * 全局的日期转换类 string-》date */@Componentpublic class DateConvert implements Converter&lt;String, Date&gt; &#123; private String[] pattern = &#123;&quot;yyyy-MM-dd HH:mm:ss&quot;, &quot;yyyy-MM-dd&quot;&#125;; @Override public Date convert(String s) &#123; if (StringUtils.isNullOrEmpty(s)) &#123; return null; &#125; try &#123; if (s.contains(&quot;:&quot;)) &#123; return new SimpleDateFormat(pattern[0]).parse(s); &#125; else &#123; return new SimpleDateFormat(pattern[1]).parse(s); &#125; &#125; catch (Exception e) &#123; throw new SOAException(&quot;日期格式不正确，无法转换&quot; + s); &#125; &#125;&#125;]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[docker四大网络模式]]></title>
+    <url>%2F2020%2F04%2F23%2Fdocker%E5%9B%9B%E5%A4%A7%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%2F</url>
+    <content type="text"><![CDATA[docker的网络管理之四大网络模式介绍~! bridge模式 host模式 container模式 none模式四大模式包含: bridge模式 host模式 container模式 none模式1.bridge模式当docker进程启动时,会在主机上创建一个名为docker0的虚拟网卡,此主机上启动的Docker容器会连接到这个虚拟网卡上,从docker0子网中分配一个IP给容器使用,并设置docker0的IP地址为容器的默认网关。在主机上创建一对虚拟网卡veth pair设备,docker将veth pair设备的一段放在新创建的容器中,并命名为eth0(容器的网卡),另一端放在主机中,以vethxxx这样类似的名字命名,并将这个网络设备加入到docker0网卡中。该模式是docker默认的网络模式。1docker run -d --name bridge_tomcat1 --net bridge [镜像ID]bridge模式如下图所示:bridge模式容器的网络端口映射:容器中的环境与宿主机隔离,name此时容器内与外部进行网络通信就会有些问题,外部不能直接访问容器内的IP地址和端口。docker为我们提供了宿主机的端口与容器内的端口映射来解决此问题,方式有两种,一种是随机映射,一种是指定映射,我一般都使用指定映射。在运行容器时,添加一下参数:随机映射:-p 会将容器中暴露的端口随机映射到宿主机的某一个端口上演示:1docker run --name tomcat1 -d -p [镜像ID]指定映射:-p hostPort:containerPort-p ip:hostPort:containerPort-p ip::containerPort-p 参数可以指定多次,如-p 9001:8001 -p 9002:8002演示:把容器8001端口映射到宿主机9001端口1docker run --name tomcat2 -d -p 9001:8001 tomcat2.host模式如果启动容器的时候使用host模式,那么容器将不会虚拟出自己的网卡,配置自己的IP等,而是使用宿主机的IP和端口。但是,容器的其他方面,如文件系统、进程列表等还是和宿主机隔离的。host模式如下图所示:3.container模式这个模式指定新创建的容器不会创建自己的网卡,配置自己的IP,而是和一个指定的容器共享IP、端口范围等。同样,两个容器除了网络方面,其他的如文件系统、进程列表等还是隔离的。演示:1docker run -d --name container_tomcat --net container:bridge_tomcat1 tomcatcontainer模式如下图所示:4.none模式:使用none模式,docker容器不会进行任何网络配置。也就是说,这个docker容器没有网卡、IP、路由等信息。需要我们自己为docker容器添加网卡、配置IP等。none模式如下图所示:]]></content>
+      <categories>
+        <category>docker容器系列</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[秒杀功能设计思路]]></title>
+    <url>%2F2020%2F04%2F21%2F%E7%A7%92%E6%9D%80%E5%8A%9F%E8%83%BD%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF%2F</url>
+    <content type="text"><![CDATA[中间件使用: Redis RabbitMQ一. 使用Redis原因秒杀场景是属于一个高并发的场景,需要处理商品超卖的情况,而Redis是属于单线程的Nosql数据库,在Redis中使用String类型存储抢购商品的数量,每次抢购使用decr操作商品数量,如果返回的数据大于等于0,则抢购成功,否则失败.ps:decr是做减一操作,并返回结果.改操作是原子性的.二. 相关队列的设计介绍:order_pendding_queue: 用户抢购成功后向该队列发送订单信息,排队生成订单;delay_queue: 死信队列,不需要任何消费者,设置该队列的消息超时时间为15分钟,消息超时后发送到order_timeout_queue队列;order_timeout_queue: 订单超时的队列,消费者消费该队列的消息,验证订单是否付款(根据业务逻辑判断状态即可),未支付则该订单作废,并且回补库存,发送消息到pub_sub_queue队列,通知contorller释放本地标识;order_result_faile_queue: 下单失败则发送消息到该队列,做回补库存操作,并发送消息到pub_sub_queue队列,通知contorller释放本地标识;order_msg_queue: 订单服务创建订单不管成功/失败,都要向该队列发送消息,由websocket服务消费消息,通知用户抢购结果;pub_sub_queue: 该队列为发布订阅模式,在做库存回补操作后发布消息,通知controller释放本地标识;三.未完,待续…]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>秒杀功能</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ElasticSearch常见面试题]]></title>
     <url>%2F2020%2F03%2F19%2FElasticSearch%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%2F</url>
     <content type="text"><![CDATA[整理最近面试遇到的Elasticsearch面试题~! 0.组件介绍 1.详细描述一下Elasticsearch索引文档的过程 2.详细描述一下Elasticsearch更新和删除文档的过程。 3.详细描述一下Elasticsearch搜索的过程 4.在并发情况下Elasticsearch如何保证读写一致 5.如何监控Elasticsearch集群状态? 6.elasticsearch了解多少,说说你们公司es的集群架构,索引数0.组件介绍E1asticsearchTemplate: 框架封装的用于便捷操作Elasticsearth的模板类ElasticsearchRepository: 框架封装的用于便捷完成CRUD的接口NativeSearBuilder: 用于生成查询条件的构建器,需要去封装各种查询条件QueryBuilder: 该接口表示一个查询条件,其对象可以通过QueryBuilders工具类中的方法快速生成各种条件boolQuery(): 生成bool条件,相当于”boo”:{}matchquery(): 生成match条件,相当于” match”:{}rangeQuery(): 生成range条件,相当于” range”:{}bstractAggregati der: 用于生成分组查询的构建器,其对象通过AggregationBuilders工具类生成Pageable: 表示分页参数,对象通过PageRequest.of(页数,容量)获取SortBuil der: 排序构建器,对象通过SortBuilders.fieldsort(字段).order(规则)获取1.详细描述一下 Elasticsearch索引文档的过程协调节点默认使用文档D参与计算(也支持通过routing),以便为路由提供合适的分片。shard hash (document_id) % (num_of_primary_shards)当分片所在的节点接收到来自协调节点的请求后,会将请求写入到Memory Buffer,然后定时(默认是每隔1秒)写入到Filesystem Cache,这个从Momery Buffer到Filesystem Cache的过程就叫做refresh;当然在某些情况下,存在Momery Buffer.和Filesystem Cache的数据可能会丢失,ES是通过translog的机制来保证数据的可靠性的。其实现机制是接收到请求后,同时也会写入到translog中,当Filesystem cache中的数据写入到磁盘中时,才会清除掉,这个过程叫做fush;在fush过程中,内存中的缓冲将被清除,内容被写入一个新段,段的fsync将创建一个新的提交点,并将内容刷新到磁盘,旧的 Translog将被删除并开始一个新的translogfush触发的时机是定时触发(默认30分钟)或者translog变得太大(默认为512M)时;2.详细描述一下 Elasticsearch更新和删除文档的过程。·删除和更新也都是写操作,但是Elasticsearch!中的文档是不可变的,因此不能被删除或者改动以展示其变更;·磁盘上的每个段都有一个相应的.del文件。当删除请求发送后,文档并没有真的被删除,而是在.del文件中被标记为删除。该文档依然能匹配查询,但是会在结果中被过滤掉。当段合并时,在de文件中被标记为删除的文档将不会被写入新段。在新的文档被创建时,Elasticsearch会为该文档指定一个版本号,当执行更新时,旧版本的文档在.del文件中被标记为删除,新版本的文档被索引到—一个新段。旧版本的文档依然能匹配查询,但是会在结果中被过滤掉。3.详细描述一下 Elasticsearch搜索的过程搜索被执行成一个两阶段过程,我们称之为Query Then Fetch;在初始查询阶,时,查询会广播到索引中每一个分片拷贝(主分片或者副本分片)。每个分片在本地执行搜索并构建一个匹配文档的大小为from+se的优先队列。PS:在搜索的时候是会查询filesystem Cache的,但是有部分数据还在Memory Buffer,所以搜索是近实的的。·每个分片返回各自优先队列中所有文档的ID和排序值给协调节点它合并这些值到自己的优先队列中来产生一个全局排序后的结果列表。接下来就是回阶段,协调节点辨别出哪些文档需要被取回并向相关的分片提交多个GET请求。每个分片加载并丰富文档,如果有需要的话,接着返回文档给协调节点。一旦所有的文档都被取回了,协调节点返回结果给客户端。补充:Query Then Fetch的索类型在文档相关性打分的的候参考的是本分片的数据,这样在文档数量较少的候可能不够准确,DFS Query Then Fet增加了一个预查询的处理,询可Term和Document frequency,这个评分更准确,但是性能会变差4.在并发情况下, Elasticsearch如何保证读写一致·可以通过版本号使用乐观并发控制,以确保新版本不会被旧版本覆盖,由应用层来处理具体的冲突;另外对于写操作,一致性级别支持quorum/one/a,默认为quorum,即只有当大多数分片可用时才允许写操作。但即使大多数可用,也可能存在因为网络等原因导致写入副本失败,这样该副本被认为故障,分片将会在一个不同的节点上重建。对于读操作,可以设置replication为syn(默认),这使得操作在主分片和副本分片都完成后才会返回;如果设置replication为async时,也可以通过设置搜索请求参数preference为primary来查询主分片,确保文档是最新版本5.如何监控 Elasticsearch集群状态?Marvel让你可以很简单的通过Kiana监控Elasticsearch。你可以实时查看你的集群健康状态和性能,也可以分析过去的集群、索引和节点指标6.elasticsearch了解多少,说说你们公司es的集群架构,索引数据大小,分片有多少,以及一些调优手段。面试官:想了解应聘者之前公司接触的ES使用场景、规模,有没有做过比较大规模的索引设计、规划、调优。解答:如实结合自己的实践场景回答即可。比如:ES集群架构13个节点,索引根据通道不同共20+索引,根据日期,毎日递增20+,索引:10分片,毎日递增1亿+数据,每个通道每天索引大小控制:150GB之内]]></content>
@@ -359,7 +444,7 @@
   <entry>
     <title><![CDATA[docker基本命令使用]]></title>
     <url>%2F2019%2F06%2F24%2Fdocker%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%2F</url>
-    <content type="text"><![CDATA[记录docker常用命令1. 查看本地镜像列表1docker images2. 查看运行中的容器1docker ps3. 查看所有容器(包括未运行的)1docker ps -a4. 删除镜像1docker rmi &lt;镜像ID&gt;5. run命令docker run [参数] [镜像id] | [镜像名]:[镜像标签] [命令]-i 表示容器的输入终端保持打开,不直接关闭-t 表示开启一个虚拟终端, 绑定到标准输入上-d 表示让该容器在后台运行–name 给该容器起一个容器名，如果没有此参数，则有一个默认的容器名–rm 停止该容器时，把容器删除掉6. 使用镜像运行容器1docker run -it --name &lt;容器名称&gt; -d -p &lt;port:port&gt; &lt;镜像ID&gt;7. 启动容器1docker start &lt;容器ID&gt;8. 停止容器1docker stop &lt;容器ID&gt;9. 删除容器1docker rm &lt;容器ID&gt;10. 查看docker的所有容器运行状态1docker stats11. 进入容器里面1docker exec -it &lt;容器ID&gt; /bin/bash12. 查看容器运行日志(类似 tail -f 命令)1docker logs -f &lt;容器ID/名称&gt;13. 构建镜像进入存放dockerfile目录,执行构建命令1docker build -t [镜像名]:[镜像标签] [存放dockerfile的目录]]]></content>
+    <content type="text"><![CDATA[记录docker常用命令1. 查看本地镜像列表1docker images2. 查看运行中的容器1docker ps3. 查看所有容器(包括未运行的)1docker ps -a4. 删除镜像1docker rmi &lt;镜像ID&gt;5. run命令docker run [参数] [镜像id] | [镜像名]:[镜像标签] [命令]-i 表示容器的输入终端保持打开,不直接关闭-t 表示开启一个虚拟终端, 绑定到标准输入上-d 表示让该容器在后台运行–name 给该容器起一个容器名，如果没有此参数，则有一个默认的容器名–rm 停止该容器时，把容器删除掉6. 使用镜像运行容器1docker run -it --name &lt;容器名称&gt; -d -p &lt;port:port&gt; &lt;镜像ID&gt;7. 启动容器1docker start &lt;容器ID&gt;8. 停止容器1docker stop &lt;容器ID&gt;9. 删除容器1docker rm &lt;容器ID&gt;10. 查看docker的所有容器运行状态1docker stats11. 进入容器里面1docker exec -it &lt;容器ID&gt; /bin/bash12. 查看容器运行日志(类似 tail -f 命令)1docker logs -f &lt;容器ID/名称&gt;13. 构建镜像进入存放dockerfile目录,执行构建命令1docker build -t [镜像名]:[镜像标签] [存放dockerfile的目录]14.修改镜像名称和标签1docker tag [镜像名]:[镜像标签] [新镜像名]:[新镜像标签]15.查看docker的所有容器运行状态1docker stats15.获取容器的详细信息1docker inspect -f &#123;&#123;.State.Pid&#125;&#125; 54ada6028aa9]]></content>
       <categories>
         <category>docker容器系列</category>
       </categories>
@@ -479,7 +564,7 @@
   <entry>
     <title><![CDATA[git命令]]></title>
     <url>%2F2019%2F05%2F13%2Fgit%E5%91%BD%E4%BB%A4-1%2F</url>
-    <content type="text"><![CDATA[记录常用的git命令删除已关联的远程仓库1git remote rm origin暂存到本地仓库1git commit -m &quot;add 3 files.&quot;推送到远程仓库1234git pull origin master// 强行推送git pull origin master -f]]></content>
+    <content type="text"><![CDATA[记录常用的git命令删除已关联的远程仓库1git remote rm origin暂存到本地仓库1git commit -m &quot;add 3 files.&quot;推送到远程仓库1234git pull origin master// 强行推送git pull origin master -f删除本地tag1git tag -l | xargs git tag -dGit合并某个分支的某次提交到指定分支1git cherry-pick commitIDcommitID : 8位数]]></content>
       <tags>
         <tag>git</tag>
       </tags>

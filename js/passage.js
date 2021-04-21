@@ -24,7 +24,7 @@
     tocShowBtn = document.querySelector('#site-toc-show-btn'),
     tocHideBtn = document.querySelector('#site-toc-hide-btn');
     // 默认显示目录
-    toc.style.right = '0';
+   // toc.style.right = '0';
   tocShowBtn && tocShowBtn.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();

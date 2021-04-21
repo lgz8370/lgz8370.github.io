@@ -1,5 +1,5 @@
-https://www.lgzblog.com/2020/03/19/ElasticSearch常见面试题/
-https://www.lgzblog.com/2019/11/20/Lambda-Stream专集/
-https://www.lgzblog.com/2019/11/13/2018-08-06-RabbitMQ-Four-models/
-https://www.lgzblog.com/2019/11/11/RabbitMQ总结/
-https://www.lgzblog.com/2019/11/09/SpringBoot整合RabbitMQ并使用/
+https://www.lgzblog.com/2021/03/03/Elasticsearch解决只能查询10000条数据方案/
+https://www.lgzblog.com/2020/11/16/maven常用参数及说明/
+https://www.lgzblog.com/2020/08/01/使用MavenHelper解决jar包冲突问题/
+https://www.lgzblog.com/2020/06/18/位状态工具类/
+https://www.lgzblog.com/2020/06/09/代码提交规范/
